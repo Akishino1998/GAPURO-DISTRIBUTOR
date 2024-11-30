@@ -166,24 +166,6 @@
                       </div>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-12">
-				<div class="card">
-                    <div class="card-header">
-                        <strong class="text-danger"><i class="fas fa-exclamation-triangle"></i> Servisan Urgent</strong>
-                    </div>
-                    <div class="card-body">
-                        <livewire:dashboard.urgent>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <strong>Servisan Terlama Bulan Ini </strong>
-                    </div>
-                    <div class="card-body">
-                        <livewire:dashboard.servisan>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </section>

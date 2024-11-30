@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/u1429960/public_html
+    - /bin/cp -r * $DEPLOYPATH/distributor.owafs.id

@@ -22,7 +22,7 @@
             <div class="card-body">
                 <div class="card card-primary card-outline">
                     <div class="card-header">
-                        <h3 class="card-title"><strong>Pilih Barang </strong>
+                        <h3 class="card-title"><strong>Pilih Barang {{ ($statusHarga)?"1":"2" }}</strong>
                             <div wire:loading="">
                                 <i class="fas fa-circle-notch fa-spin"></i>
                             </div>

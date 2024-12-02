@@ -7,7 +7,7 @@
 			<div class="col-sm-12">
 				<div class="card card-info card-outline">
 					<div class="card-body">
-						<h4><strong>Dashboard <u>Eko</u> {{  \Carbon\Carbon::parse(NOW())->translatedFormat('F Y')  }}</strong></h>
+						<h4><strong>Halo, <u></u> {{  \Carbon\Carbon::parse(NOW())->translatedFormat('F Y')  }}</strong></h>
 					</div>
 				</div>
 			</div>

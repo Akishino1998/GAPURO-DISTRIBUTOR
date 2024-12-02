@@ -4,10 +4,13 @@ use App\Http\Controllers\BarangController;
 use Illuminate\Support\Facades\Route;
 require __DIR__.'/auth.php';
 
-Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+Route::get('/', function () {
+    return redirect(route('dashboard'));
+});
 
 // Route::group(['middleware'=>['Log'] ],function () {
     Route::group(['middleware'=>['auth','RolePermission'] ],function () {
+        Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
         Route::group(['prefix'=>'admin','as'=>'admin.' ],function () {
             Route::group(['prefix'=>'master','as'=>'master.' ],function () {
                 Route::group(['prefix'=>'user','as'=>'user.' ],function () {
@@ -41,7 +44,6 @@ Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])-
 
     });
 // });
-
 
 
 

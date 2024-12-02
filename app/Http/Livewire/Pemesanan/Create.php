@@ -71,7 +71,6 @@ class Create extends Component
             'qty_pemesanan' => 'required',
             'idBarang' => 'required',
         ]);
-       
             $check = PemesananDetailTemp::where('id_user',auth()->user()->id)->where('id_barang', $this->idBarang)->get();
             if (COUNT($check)>0) {
                 if($this->statusBarang == false){
@@ -91,18 +90,24 @@ class Create extends Component
        
     }
     function tambahPemesanan(){
+        $tempBarang = PemesananDetailTemp::where('id_user',auth()->user()->id)->get();
+        if (COUNT($tempBarang)==0) {
+            session()->flash('message-failed', "Pilih Barang terlebih dahulu!");
+            return 0;
+        }
+
         $pemesanan = new Pemesanan;
         $pemesanan->nomor_pesanan =  $pemesanan->UNIQUE_KODE();
-        $pemesanan->status =  1;
-        if ( $this->statusHarga) {
+        if ( $this->statusHarga == 1) {
             $pemesanan->status_harga =  1; //sudah ada harga
+            $pemesanan->status =  1;
         }else{
             $pemesanan->status_harga =  2; //belum ada harga
+            $pemesanan->status = 2;
         }
         $pemesanan->id_user =  auth()->user()->id;
         $pemesanan->tgl_pemesanan = NOW();
         $pemesanan->save();
-        $tempBarang = PemesananDetailTemp::where('id_user',auth()->user()->id)->get();
         foreach ($tempBarang as $item) {
             $barangTemp = new PemesananDetail;
             $barangTemp->id_pemesanan = $pemesanan->id;

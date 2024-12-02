@@ -32,9 +32,9 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $kategori->kategori }}</td>
                 <td width="120">
-                    {!! Form::open(['route' => ['admin.kategori.destroy', $kategori->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['admin.master.kategori.destroy', $kategori->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('admin.kategori.edit', [$kategori->id]) }}"
+                        <a href="{{ route('admin.master.kategori.edit', [$kategori->id]) }}"
                            class='btn btn-primary btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>

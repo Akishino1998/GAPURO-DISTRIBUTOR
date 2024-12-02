@@ -32,7 +32,7 @@ class Pemesanan extends Model
         if($status == 0){
             return '<strong><span class="badge bg-danger"><i class="fas fa-times"></i> Dibatalkan</span></strong>';
         }else if ($status == 1) {
-            return '<span class="badge bg-warning"><i class="fas fa-spinner fa-spin"></i> Proses</span>';
+            return '<span class="badge bg-secondary"><i class="fas fa-spinner fa-spin"></i> Belum Diproses</span>';
         }else if ($status == 2) {
             return '<span class="badge bg-info"><i class="fas fa-file-signature"></i> Pengajuan Harga</span>';
         }else if ($status == 3) {

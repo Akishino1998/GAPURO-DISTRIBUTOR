@@ -16,7 +16,7 @@
 @if (Auth::user()->Role->RolePermission->where('id_permission',($providerPermission->where("route_name",'LIKE',"barang.index")->COUNT()>0)?$providerPermission->where("route_name",'LIKE',"barang.index")->first()->id:"")->COUNT()>0 )
     <li class="nav-item mt-1">
         <a href="{{ route('barang.index') }}" class="nav-link  {{ (request()->routeIs('barang*')) ? 'active' : '' }}">
-            <i class="nav-icon fas fa-home"></i>
+            <i class="nav-icon fas fa-boxes"></i>
             <p>
                 Barang
             </p>
@@ -27,7 +27,7 @@
 @if (Auth::user()->Role->RolePermission->where('id_permission',($providerPermission->where("route_name",'LIKE',"toko.index")->COUNT()>0)?$providerPermission->where("route_name",'LIKE',"toko.index")->first()->id:"")->COUNT()>0 )
     <li class="nav-item mt-1">
         <a href="{{ route('toko.index') }}" class="nav-link  {{ (request()->routeIs('toko*')) ? 'active' : '' }}">
-            <i class="nav-icon fas fa-home"></i>
+            <i class="nav-icon fas fa-store"></i>
             <p>
                 Toko
             </p>
@@ -38,7 +38,7 @@
 @if (Auth::user()->Role->RolePermission->where('id_permission',($providerPermission->where("route_name",'LIKE',"konsumen.index")->COUNT()>0)?$providerPermission->where("route_name",'LIKE',"konsumen.index")->first()->id:"")->COUNT()>0 )
     <li class="nav-item mt-1">
         <a href="{{ route('konsumen.index') }}" class="nav-link  {{ (request()->routeIs('konsumen*')) ? 'active' : '' }}">
-            <i class="nav-icon fas fa-user"></i>
+            <i class="nav-icon fas fa-users"></i>
             <p>
                 Konsumen
             </p>
@@ -48,9 +48,9 @@
 @if (Auth::user()->Role->RolePermission->where('id_permission',($providerPermission->where("route_name",'LIKE',"pemesanan.index")->COUNT()>0)?$providerPermission->where("route_name",'LIKE',"pemesanan.index")->first()->id:"")->COUNT()>0 )
     <li class="nav-item mt-1">
         <a href="{{ route('pemesanan.index') }}" class="nav-link  {{ (request()->routeIs('pemesanan*')) ? 'active' : '' }}">
-            <i class="nav-icon fas fa-user"></i>
+            <i class="nav-icon fas fa-file-signature"></i>
             <p>
-                Pemesanan
+                Pemesanan 
             </p>
         </a>
     </li>
@@ -58,7 +58,7 @@
 @if (Auth::user()->Role->RolePermission->where('id_permission',($providerPermission->where("route_name",'LIKE',"admin.pemesanan.index")->COUNT()>0)?$providerPermission->where("route_name",'LIKE',"admin.pemesanan.index")->first()->id:"")->COUNT()>0 )
     <li class="nav-item mt-1">
         <a href="{{ route('admin.pemesanan.index') }}" class="nav-link  {{ (request()->routeIs('admin.pemesanan*')) ? 'active' : '' }}">
-            <i class="nav-icon fas fa-user"></i>
+            <i class="nav-icon fas fa-file-signature"></i>
             <p>
                 Pemesanan
             </p>

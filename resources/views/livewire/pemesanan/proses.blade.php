@@ -20,8 +20,7 @@
                     <a href="{{ route('admin.pemesanan.index') }}" class="btn btn-primary btn-sm"><strong><i class="fas fa-backward    "></i> Kembali</strong></a>  <strong>Informasi Pemesanan</strong>
                 </h3>
                 <div class="card-options float-right">
-                    @if ($pemesanan->status == 7)
-                    @endif
+       
                     @if ($pemesanan->status == 3)
                         <button data-toggle="modal" data-target="#modalBatalkanPemesanan" class="btn btn-danger btn-sm"><i class="fas fa-times-circle"></i> Batalkan Pemesanan</button>
                         <a href="{{ route('pemesanan.cekHarga',$pemesanan->id) }}" class="btn btn-warning btn-sm"><strong><i class="fas fa-tasks"></i> Cek Barang</strong></a>
@@ -31,7 +30,8 @@
                             <button data-toggle="modal" data-target="#modalSetujuiBarang"  class="btn btn-{{ $pemesanan->colorStatus($pemesanan->status) }} btn-sm"><strong><i class="fas fa-clipboard-check"></i> Setujui Barang Terpilih</strong></button>
                         @endif
                     @elseif($pemesanan->status == 7)
-                    <button data-toggle="modal" data-target="#modalPesananDiterima" class="btn btn-warning btn-sm"><i class="fas fa-hands"></i>  Pesanan sudah diterima?</button>
+                        <button data-toggle="modal" data-target="#modalPesananDiterima" class="btn btn-warning btn-sm"><i class="fas fa-hands"></i>  Pesanan sudah diterima?</button>
+                    
                     @else
                         <button class="btn btn-{{ $pemesanan->colorStatus($pemesanan->status) }} btn-sm">{!! $pemesanan->status($pemesanan->status) !!}</button>
                     @endif
@@ -63,7 +63,7 @@
                                     <td>Status Pemesanan</td>
                                     <td>:</td>
                                     <td>
-                                        <strong>{!! $pemesanan->Status($pemesanan->status) !!}</strong>
+                                        <strong>{!! $pemesanan->status($pemesanan->status) !!}</strong>
                                     </td>
                                 </tr>
                             </tbody>
@@ -71,27 +71,35 @@
                     </div>
                 </div>
                 <div class="row">
+               
                     <div class="col-md-8">
                         @if( $pemesanan->status == 3)
                             <div class="callout callout-info">
                                 <h5><i class="fas fa-info"></i> Note:</h5>
                                 Kamu perlu menerima penawaran yang diberikan atau membatalkannya
                             </div>
+                        @elseif( $pemesanan->status == 0)
+                            <div class="callout callout-danger">
+                                <h5><i class="fas fa-danger"></i> Note:</h5>
+                                Pesanan dibatalkan! Keterangan: {{ $pemesanan->keterangan_batal }}
+                            </div>
                         @endif
-                      
                         <div class="card card-primary card-outline">
-                            
-                            <table class="table table-sm table-striped table-hover " id="servisan-table" wire:ignore.self="">
-                                <thead wire:ignore="">
+                            <table class="table table-sm table-striped table-hover " id="servisan-table">
+                                <thead>
                                     <tr class="text-center">
                                         <th>No</th>
                                         <th>Kategori</th>
                                         <th>Nama Barang</th>
                                         <th>Harga Per Satuan </th>
-                                        <th>Qty</th>
+                                        <th>Qty Permintaan</th>
                                         <th>Satuan</th>
-                                        <th>Total Harga</th>
-                                        <th>Keterangan</th>
+                                        @if (in_array($pemesanan->status, [7,8,9]))
+                                            <th>Qty Diterima</th>
+                                            <th>Total Harga</th>
+                                        @else
+                                            <th>Total Harga</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody class="text-center">
@@ -104,42 +112,86 @@
                                                 <td>{{ $i++ }}</td>
                                                 <td>{{ $item->Barang->Kategori->kategori }}</td>
                                                 <td>{{ $item->Barang->nama_barang }}</td>
-                                                <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format($item->harga_per_satuan, 0, ",", ".") }}
-                                                </td>
+                                                <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format($item->harga_per_satuan, 0, ",", ".") }}</td>
                                                 <td>{{ $item->qty }}</td>
                                                 <td>{{ $item->Satuan->satuan }}</td>
-                                                <td>{{ ($item->harga_jual==null)?"-":"Rp. " .  number_format($item->harga_per_satuan*$item->qty, 0, ",", ".") }}
-                                                </td>
-                                                <td>{{ ($item->keterangan==null)?'-':$item->keterangan }}</td>
+                                                @if (in_array($pemesanan->status, [7,8,9]))
+                                                    <td>{{ $item->qty_diterima }}</td>
+                                                    <td>{{ ($item->harga_jual==null)?"-":"Rp. " .  number_format($item->harga_per_satuan*$item->qty_diterima, 0, ",", ".") }}</td>
+                                                @else
+                                                    <td>{{ ($item->harga_jual==null)?"-":"Rp. " .  number_format($item->harga_per_satuan*$item->qty, 0, ",", ".") }}</td>
+                                                @endif
                                             </tr>
                                         @endforeach
                                     @endforeach
                                 </tbody>
                             </table>
                             @if (COUNT($pemesanan->PemesananDetail)==0)
-                            <div class="alert alert-danger" role="alert">
-                                <p>Tidak Ada Datanya! </p>
-                            </div>
+                                <div class="alert alert-info ml-3 mr-3" role="alert">
+                                    <p style="margin-bottom: 0px;">Tidak ada barang yang dipesan</p>
+                                </div>
                             @endif
                         </div>
+                        @if (in_array($pemesanan->status, [1,2,3]))
+                            <div class="card card-primary card-outline">
+                                <div class="card-header">
+                                    <h3 class="card-title"><strong>Request Pemensanan </strong>
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-sm table-striped table-hover " id="servisan-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:80px" class="text-center">No</th>
+                                                <th>Nama Barang</th>
+                                                <th class="text-center">Qty</th>
+                                                <th class="text-center">Keterangan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $i = 1;
+                                            @endphp
+                                            @foreach ($pemesanan->PemesananRequest as $item)
+                                                <tr>
+                                                    <td class="text-center">{{ $i++ }}</td>
+                                                    <td>{{ $item->nama_barang }}</td>
+                                                    <td class="text-center">{{ $item->qty }}</td>
+                                                    <td class="text-center">{!! $item->statusRequest($item->status_request) !!}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    @if (COUNT($pemesanan->PemesananRequest)==0)
+                                        <div class="alert alert-info" role="alert">
+                                            <p style="margin-bottom: 0px;">Tidak ada barang yang dipesan</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
                     </div>
                     <div class="col-md-4 col-sm-12">
                         <div class="card card-primary card-outline">
                             <div class="card-body">
+                                
                                 <div class="timeline" style="margin: 0px">
-                                    <div class="time-label">
-                                        <span class="bg-red">11 Nov 2024</span>
-                                    </div>
-                                    <div> 
-                                        <i class="fas fa-spinner fa-spin  bg-warning"></i>
-                                        <div class="timeline-item">
-                                            <span class="time"><i class="fas fa-clock"></i> 18:09</span>
-                                            <h3 class="timeline-header"><strong>Proses</strong></h3>
-                                            <div class="timeline-body">
-                                                Pemesanan dibuat dan dipesan
-                                            </div>
+                                    @foreach ($pemesanan->PemesananTimeLine as $item)
+                                        <div class="time-label">
+                                            <span class="bg-{!! $item->statusColor($item->icon) !!}">{{  \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y')  }}</span>
                                         </div>
-                                    </div>
+                                        <div> 
+                                            {!! $item->statusIcon($item->icon) !!}
+                                            <div class="timeline-item">
+                                                <span class="time"><i class="fas fa-clock"></i> {{  \Carbon\Carbon::parse($item->created_at)->translatedFormat('H:i')  }}</span>
+                                                <h3 class="timeline-header"><strong>{!! $item->statusText($item->icon) !!}</strong></h3>
+                                                <div class="timeline-body">
+                                                    {{ $item->keterangan }}
+                                                </div>
+                                            </div>
+                                        </div>  
+
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

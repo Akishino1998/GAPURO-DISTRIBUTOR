@@ -23,13 +23,27 @@ class PemesananController extends Controller
         if ($pemesanan == null) {
             return redirect(route('pemesanan.index'));
         }
-        return view('pemesanan.setHarga',compact('pemesanan'));
+        return view('admin.pemesanan.setHarga',compact('pemesanan'));
+    }
+    function request($id){
+        $pemesanan = Pemesanan::find($id);
+        if ($pemesanan == null) {
+            return redirect(route('pemesanan.index'));
+        }
+        return view('admin.pemesanan.request',compact('pemesanan'));
+    }
+    function menyiapkan($id){
+        $pemesanan = Pemesanan::find($id);
+        if ($pemesanan == null) {
+            return redirect(route('pemesanan.index'));
+        }
+        return view('admin.pemesanan.menyiapkan',compact('pemesanan'));
     }
     function penerimaan($id){
         $pemesanan = Pemesanan::find($id);
         if ($pemesanan == null) {
             return redirect(route('pemesanan.index'));
         }
-        return view('pemesanan.penerimaan',compact('pemesanan'));
+        return view('admin.pemesanan.penerimaan',compact('pemesanan'));
     }
 }

@@ -34,13 +34,15 @@ class Pemesanan extends Model
         }else if ($status == 1) {
             return '<span class="badge bg-secondary"><i class="fas fa-spinner fa-spin"></i> Belum Diproses</span>';
         }else if ($status == 2) {
-            return '<span class="badge bg-info"><i class="fas fa-file-signature"></i> Pengajuan Harga</span>';
+            return '<span class="badge bg-info"><i class="fas fa-file-signature"></i> Permintaan Harga</span>';
         }else if ($status == 3) {
             return '<span class="badge bg-info"><i class="fas fa-file-signature"></i> Penawaran Harga</span>';
         }else if ($status == 4) {
             return '<span class="badge bg-success"><i class="fas fa-truck-loading"></i> Pesanan Sedang Disiapkan</span>';
         }else if ($status == 6) {
-            return '<span class="badge bg-success"><i class="fas fa-truck"></i> Dalam Pengiriman</span>';
+            return '<span class="badge bg-primary"><i class="fas fa-truck"></i> Dalam Pengiriman</span>';
+        }else if ($status == 5) {
+            return '<span class="badge bg-success"><i class="fas fa-truck"></i> Barang Sudah Sampai</span>';
         }else if ($status == 7) {
             return '<span class="badge bg-success"><i class="fas fa-user-check"></i> Telah diserahkan ke konsumen</span>';
         }else if ($status == 8) {
@@ -51,7 +53,7 @@ class Pemesanan extends Model
         if($status == 0){
             return 'danger';
         }else if ($status == 1) {
-            return 'warning';
+            return 'secondary';
         }else if ($status == 2) {
             return 'info';
         }else if ($status == 3) {
@@ -59,12 +61,77 @@ class Pemesanan extends Model
         }else if ($status == 4) {
             return 'success';
         }else if ($status == 6) {
+            return 'primary';
+        }else if ($status == 5) {
             return 'success';
         }else if ($status == 7) {
             return 'success';
         }else if ($status == 8) {
             return 'success';
         }
+    }
+    function imgStatus($status){
+        if($status == 0){
+            return asset('img/status/stat0.png');
+        }else if ($status == 1) {
+            return asset('img/status/stat01.png');
+        }else if ($status == 2) {
+            return asset('img/status/stat02.png');
+        }else if ($status == 3) {
+            return asset('img/status/stat03.png');
+        }else if ($status == 4) {
+            return asset('img/status/stat04.png');
+        }else if ($status == 6) {
+            return asset('img/status/stat05.png');
+        }else if ($status == 5) {
+            return asset('img/status/stat08.png'); 
+        }else if ($status == 7) {
+            return asset('img/status/stat06.png');
+        }else if ($status == 8) {
+            return asset('img/status/stat10.png');//change
+        }else if ($status == 9) {
+            return asset('img/status/stat09.png');
+        }
+    }
+    function setTimelinePemesanan($id){
+        $pemesanan = Pemesanan::find($id);
+        $timeline = new PemesananTimeLine;
+        $timeline->id_pemesanan = $pemesanan->id;
+        $timeline->title = $pemesanan->status;
+        $timeline->icon = $pemesanan->status;
+        $timeline->color = $pemesanan->status;
+        if($pemesanan->status == 0){
+            $timeline->keterangan = "Pemesanan dibatalkan!";
+            $timeline->save();
+        }else if ($pemesanan->status == 1) {
+            $timeline->keterangan = "Pemesanan dibuat, akan dicek oleh admin!";
+            $timeline->save();
+        }else if ($pemesanan->status == 2) {
+            $timeline->keterangan = "Permintaan harga diajukan, mohon tunggu!";
+            $timeline->save();
+        }else if ($pemesanan->status == 3) {
+            $timeline->keterangan = "Penawaran harga dibuat, menunggu persetujuan!";
+            $timeline->save();
+        }else if ($pemesanan->status == 4) {
+            $timeline->keterangan = "Pesananmu sedang disiapkan!";
+            $timeline->save();
+        }else if ($pemesanan->status == 5) {
+            $timeline->keterangan = "Pesananmu telah sampai!";
+            $timeline->save();
+        }else if ($pemesanan->status == 6) {
+            $timeline->keterangan = "Dalam Pengiriman!";
+            $timeline->save();
+        }else if ($pemesanan->status == 7) {
+            $timeline->keterangan = "Sudah sampai, konsumen menerima!";
+            $timeline->save();
+        }else if ($pemesanan->status == 8) {
+            $timeline->keterangan = "Diterima, menunggu pembayaran!";
+            $timeline->save();
+        }else if ($pemesanan->status == 9) {
+            $timeline->keterangan = "Pemesanan selesai!";
+            $timeline->save();
+        }
+
     }
     function cekStatusHarga($id){
         $pemesanan = Pemesanan::find($id);
@@ -74,7 +141,22 @@ class Pemesanan extends Model
                 $cekHarga++;
             }
         }
+        foreach ($pemesanan->PemesananRequest as $item) {
+            if ($item->status_request == 1) {
+                $cekHarga++;
+            }
+        }
         return $cekHarga;
+    }
+    function cekStatusRequest($id){
+        $pemesanan = Pemesanan::find($id);
+        $cekRequest = 0;
+        foreach ($pemesanan->PemesananRequest as $item) {
+            if ($item->status_request == 1) {
+                $cekRequest++;
+            }
+        }
+        return $cekRequest;
     }
     function cekStatusHargaUser($id){
         $pemesanan = Pemesanan::find($id);
@@ -115,10 +197,17 @@ class Pemesanan extends Model
         $today = date("dmy");
         return "0".auth()->user()->id."/".$totalUser."/".$today;
     } 
-
+    public function PemesananTimeLine()
+    {
+        return $this->hasMany(PemesananTimeLine::class, 'id_pemesanan', 'id')->latest();
+    }
     public function PemesananDetail()
     {
         return $this->hasMany(PemesananDetail::class, 'id_pemesanan', 'id');
+    }
+    public function PemesananRequest()
+    {
+        return $this->hasMany(PemesananRequest::class, 'id_pemesanan', 'id');
     }
     public function User()
     {

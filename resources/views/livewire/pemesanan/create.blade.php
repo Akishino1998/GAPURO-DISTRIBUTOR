@@ -22,18 +22,21 @@
             <div class="card-body">
                 <div class="card card-primary card-outline">
                     <div class="card-header">
-                        <h3 class="card-title"><strong>Pilih Barang</strong>
+                        <h2 class="card-title"><strong>Barang</strong>
                             <div wire:loading="">
                                 <i class="fas fa-circle-notch fa-spin"></i>
                             </div>
-                        </h3>
+                        </h2>
+                        <div class="card-option float-right">
+                            <button data-toggle="modal" data-target="#modalRequestBarang" class="btn btn-sm btn-primary text-white" type="submit" style="width: 100%" > <strong><i class="fas fa-box"></i> Request Pemesanan</strong></button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12">
                                 @if ($statusHarga)
                                     <div class="form-group" wire:ignore >
-                                        <label>Pilih Barang </label>
+                                        <label>Pilih Barang  <span class="badge bg-primary">Wajib</span></label>
                                         <select class="form-control select2 @error('idBarang') is-invalid @enderror" id="changeBarang" onchange="changeBarang()" style="width: 100%;" wire:model="idBarang">
                                             <option>-- Pilih Barang --</option>
                                             @foreach ($barangHargaFix as $item)
@@ -44,7 +47,7 @@
                                     </div>
                                 @else
                                     <div class="form-group" wire:ignore >
-                                        <label>Pilih Barang </label>
+                                        <label>Pilih Barang  <span class="badge bg-primary">Wajib</span></label>
                                         <select class="form-control select2 @error('idBarang') is-invalid @enderror" id="changeBarang" onchange="changeBarang()" style="width: 100%;" wire:model="idBarang">
                                             <option>-- Pilih Barang --</option>
                                             @foreach ($barang->groupBy('id_kategori') as $item)
@@ -89,13 +92,13 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label>Qty</label>
+                                        <label>Qty <span class="badge bg-primary">Wajib</span></label>
                                         <div class="input-group mb-3">
                                             <input type="text" class="form-control uang  @error('qty_pemesanan') is-invalid @enderror" wire:model="qty_pemesanan" placeholder="Qty Pemesanan">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">{{ $satuanBarang }}</span>
                                               </div>
-                                            @error('harga') <span class="error invalid-feedback">{{ $message }}</span> @enderror
+                                            @error('qty_pemesanan') <span class="error invalid-feedback">{{ $message }}</span> @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -105,19 +108,12 @@
                                 <div class="col-sm-12">
                                     <div class="callout callout-warning">
                                         <h5>Data Sama!</h5>
-                                        <p>Terdapat data yang sama, hapus data sebelumnya dan masukan data baru?</p>
+                                        <p>Terdapat data yang sama, hapus data sebelumnya dan masukan data baru</p>
                                     </div>
                                 </div>
                             @endif
                         </div>
                         <hr>
-                        @if ($statusBarang)
-                            <span class="btn btn-info" wire:click='resetItem' onclick="resetItem()">
-                                <div>
-                                    <strong style="color: white"><i class="fas fa-eraser"></i> Reset</strong>
-                                </div>
-                            </span>  
-                        @endif
                         <form wire:submit.prevent="tambahPesanan">
                             <button class="btn btn-primary" type="submit" style="width:100%">
                                 @if ($statusBarang)
@@ -144,7 +140,7 @@
                     <table class="table table-sm table-striped table-hover " id="servisan-table" wire:ignore.self="">
                         <thead wire:ignore="">
                             <tr class="text-center">
-                                <th>No</th>
+                                <th style="width: 80px">No</th>
                                 <th>Kategori</th>
                                 <th>Nama Barang</th>
                                 <th>Harga Per Satuan</th>
@@ -163,9 +159,9 @@
                                     <td>{{ $item->Barang->nama_barang }}</td>
                                     <td>{{ ($item->harga_jual==null)?"-":"Rp. " .  number_format($item->harga_jual, 0, ",", ".") }}</td>
                                     <td>{{ $item->qty }}</td>
-                                    <td>{{ $item->Satuan->satuan }}</td>
+                                    <td>{{ ($item->id_harga_fix==null)?$item->Satuan->satuan:$item->barangHargaFix->Satuan->satuan }}</td>
                                     <td>{{ ($item->harga_jual==null)?"-":"Rp. " .  number_format($item->harga_jual*$item->qty, 0, ",", ".") }}</td>
-                                    <td>{{ $item->keterangan }}</td>
+                                    <td>{{ ($item->id_harga_fix==null)?$item->keterangan:$item->barangHargaFix->keterangan }}</td>
                                     <td>
                                         <button class="btn btn-danger btn-sm" wire:click="removeItemBarang({{ $item->id }})"><i class="fa fa-trash" aria-hidden="true"></i></button>
                                     </td>
@@ -174,12 +170,83 @@
                         </tbody>
                     </table>
                     @if (COUNT($tempBarang)==0)
-                        <div class="alert alert-danger" role="alert">
-                            <p>Tidak Ada Datanya! </p>
+                        <div class="alert alert-info ml-3 mr-3" role="alert">
+                            <p>Belum ada barang yang dipesan</p>
+                        </div>
+                    @endif
+                </div>
+                <hr>
+                <div class="callout callout-info">
+                    <h5><i class="fas fa-info"></i> Note:</h5>
+                    Admin akan menambahkan data pesanan kamu sesuai request setelah diverifikasi, setelah itu kamu harus verifikasi kembali. 
+                </div>
+                <div class="card card-primary card-outline">
+                    <table class="table table-sm table-striped table-hover " id="servisan-table" wire:ignore.self="">
+                        <thead wire:ignore="">
+                            <tr class="text-center">
+                                <th style="width: 80px">No</th>
+                                <th>Nama Barang</th>
+                                <th>Qty</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            @foreach ($tempBarangRequest as $item)
+                                <tr class="text-center">
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $item->nama_barang }}</td>
+                                    <td>{{ $item->qty }}</td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm" wire:click="removeItemBarangRequest({{ $item->id }})"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    @if (COUNT($tempBarangRequest)==0)
+                        <div class="alert alert-info ml-3 mr-3" role="alert">
+                            <p>Belum ada request barang </p>
                         </div>
                     @endif
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalRequestBarang" wire:ignore.self>
+        <div class="modal-dialog"  wire:ignore.self>
+            <form wire:submit.prevent="tambahRequestPesanan">
+                @csrf
+                <div class="modal-content"  wire:ignore.self>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tambahkan permintaan pemesananmu!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="callout callout-info">
+                            <h5><i class="fas fa-info"></i> Note:</h5>
+                            Berikan informasi nama barang lengkap, data ini akan ditambahkan kepemesananmu oleh admin setelah diverifikasi. 
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label for="nama_part" class="form-label">Nama Barang <span class="badge bg-primary">Wajib</span></label>
+                            <input class="form-control @error('nama_barang_request') is-invalid @enderror" maxlength="150" required="true" autocomplete="off" wire:model="nama_barang_request" type="text"placeholder="Nama barang">
+                            @error('nama_barang_request') <span class="error invalid-feedback">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Qty <span class="badge bg-primary">Wajib</span></label>
+                                <input type="text" class="form-control @error('qty_request') is-invalid @enderror" wire:model="qty_request" placeholder="Qty Pemesanan (contoh: 2 bungkus kecil)">
+                                @error('qty_request') <span class="error invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="closeModalRequestBarang" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-info " ><i  wire:loading wire:target="tambahPemesanan" class="fas fa-circle-notch fa-spin"></i><i class="fa fa-shopping-cart" aria-hidden="true"></i> Pesan!</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     <div class="modal fade" id="modalTambahDataBarang" wire:ignore.self>
@@ -200,7 +267,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" id="closeModalTambahDataBarang" data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-success " ><i  wire:loading wire:target="tambahPemesanan" class="fas fa-circle-notch fa-spin"></i> Pesan!</button>
+                        <button type="submit" class="btn btn-info " ><i  wire:loading wire:target="tambahPemesanan" class="fas fa-circle-notch fa-spin"></i><i class="fa fa-shopping-cart" aria-hidden="true"></i> Pesan!</button>
                     </div>
                 </div>
             </form>
@@ -223,6 +290,7 @@
                     title: '{{ session("message-success") }}'
                 });
                 $('#changeBarang').val(null).trigger('change');
+                $('#closeModalRequestBarang').click(); 
             </script>
         @endif
         @if (session()->has('message-failed'))

@@ -61,6 +61,10 @@ class Harga extends Component
             session()->flash('message-failed', "Gagal menambahkan data, ada kesalahan coba reload halaman ini!");
         }
     }
+    function removeItemBarang($id){
+        BarangHargaFix::find($id)->delete();
+        session()->flash('message-success', "Data berhasil dihapus!");
+    }
     public function render()
     {
         $barang = Barang::get();

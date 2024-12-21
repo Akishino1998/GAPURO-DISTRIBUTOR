@@ -20,8 +20,8 @@
                     <a href="{{ route('admin.pemesanan.show',$pemesanan->id) }}" class="btn btn-primary btn-sm"><strong><i class="fas fa-backward    "></i> Kembali</strong></a>  <strong>Informasi Harga Barang</strong>
                 </h3>
                 <div class="card-option float-right">
-                    @if ($pemesanan->cekStatusPenerimaan($pemesanan->id) & $pemesanan->status == 6)
-                            <button data-toggle="modal" data-target="#modalPenerimaan" class="btn btn-success btn-sm"><strong><i class="fas fa-user-check"></i> Konsumen menerima semua barang?</strong></button>
+                    @if ($pemesanan->cekStatusPenerimaan($pemesanan->id) & $pemesanan->status == 5)
+                        <button data-toggle="modal" data-target="#modalPenerimaan" class="btn btn-success btn-sm"><strong><i class="fas fa-user-check"></i> Konsumen sudah menerima semua barang?</strong></button>
                     @endif
                 </div>
             </div>
@@ -34,10 +34,10 @@
                                 <th>Kategori</th>
                                 <th>Nama Barang</th>
                                 <th>Harga Per Satuan </th>
-                                <th>Qty</th>
+                                <th>Qty Permintaan</th>
                                 <th>Satuan</th>
                                 <th>Total Harga</th>
-                                <th>Keterangan</th>
+                                <th>Qty Diterima</th>
                                 <th>#</th>
                             </tr>
                         </thead>
@@ -53,11 +53,9 @@
                                 <td>{{ $item->Satuan->satuan }}</td>
                                 <td>{{ ($item->harga_jual==null)?"-":"Rp. " .  number_format($item->harga_per_satuan*$item->qty, 0, ",", ".") }}
                                 </td>
-                                <td>{{ ($item->keterangan==null)?'-':$item->keterangan }}</td>
+                                <td>{{ $item->qty_diterima }}</td>
                                 <td>
-                                    @if ($item->status_diterima == 1)
-                                        <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalStatusBarang"  wire:click="setEditHarga({{ $item->id }})"><i class="fas fa-check-double"></i></button>
-                                    @endif
+                                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalStatusBarang"  wire:click="setEditHarga({{ $item->id }})"><i class="fas fa-check-double"></i></button>
                                 </td>
                             </tr>
                             @endforeach
@@ -96,8 +94,21 @@
                                 <div class="col-12">
                                     <div class="callout callout-info">
                                         <h5><i class="fas fa-info"></i> Note:</h5>
-                                        Barang diterima?
+                                        Pastikan barang yang diterima sesuai?
                                     </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Qty <span class="badge bg-primary">Wajib</span></label>
+                                        <div class="input-group mb-3">
+                                            <input type="number" step=".01" class="form-control  @error('qty_pesanan') is-invalid @enderror" wire:model="qty_pesanan" placeholder="Qty Pemesanan">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">{{ $satuan }}</span>
+                                              </div>
+                                            @error('qty_pesanan') <span class="error invalid-feedback">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         @endif

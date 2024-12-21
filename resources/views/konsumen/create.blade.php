@@ -4,7 +4,7 @@
         @include('adminlte-templates::common.errors')
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"><a href="{{ route('toko.index') }}" class="btn btn-primary btn-sm"><strong><i class="fas fa-backward    "></i> Kembali</strong></a> <strong>Tambah Baru</strong></h3>
+                <h3 class="card-title"><a href="{{ route('konsumen.index') }}" class="btn btn-primary btn-sm"><strong><i class="fas fa-backward    "></i> Kembali</strong></a> <strong>Tambah Baru</strong></h3>
             </div>
             {!! Form::open(['route' => 'konsumen.store']) !!}
             <div class="card-body">

@@ -24,8 +24,10 @@ Route::get('/', function () {
                 Route::resource('satuan', App\Http\Controllers\BarangSatuanController::class);
             });
             Route::group(['prefix'=>'pemesanan','as'=>'pemesanan.' ],function () {
+                Route::get('/request/{id}', [App\Http\Controllers\Admin\PemesananController::class, 'request'])->name('request');
                 Route::get('/set-harga/{id}', [App\Http\Controllers\Admin\PemesananController::class, 'setHarga'])->name('setHarga');
                 Route::get('/penerimaan/{id}', [App\Http\Controllers\Admin\PemesananController::class, 'penerimaan'])->name('penerimaan');
+                Route::get('/menyiapkan/{id}', [App\Http\Controllers\Admin\PemesananController::class, 'menyiapkan'])->name('menyiapkan');
             });
 
             Route::resource('pemesanan', App\Http\Controllers\Admin\PemesananController::class);

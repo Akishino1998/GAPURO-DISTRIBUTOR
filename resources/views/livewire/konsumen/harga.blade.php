@@ -2,72 +2,88 @@
     <link rel="stylesheet" href="{{ asset('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 @endsection
 <div>
-    <div class="form-group">
-        <div class="input-group input-group">
-            <input type="search" class="form-control form-control" placeholder="Cari Barang" wire:model="search">
-            <div class="input-group-append">
-                <button type="submit" class="btn btn btn-default">
-                    <i class="fa fa-search"></i>
-                </button>
+
+    <div class="content px-3 pt-3">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <div class="card-title">
+                    <h5 style="margin-bottom: 0px"><strong>Daftar Harga Konsumen {{ $konsumen->name }}</strong></h5>
+                </div>
+                <div class="card-option">
+                    <a class="btn btn-primary btn-sm float-right" href="{{ route('konsumen.setHarga',$konsumen->id) }}"><i class="fas fa-user-plus    "></i> Tambah Data Harga Barang </a>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="table-responsive">
-        <div class="row">
-            <div class="col-12 mb-2">
-                <button class="btn btn-info btn-sm"style="width: 100%"><b><i class="fas fa-users"></i> Total Barang : {{ count($barangFix) }}</b> </button>
-            </div>
-        </div>
-        <table class="table" id="tokoPelanggans-table">
-            <thead>
-                <tr class="text-center">
-                    <th>No</th>
-                    <th>Kategori</th>
-                    <th>Nama Barang</th>
-                    <th>Qty</th>
-                    <th>Satuan</th>
-                    <th>Harga</th>
-                    <th>Keterangan</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="text-center">
-                @foreach ($barangFix as $item)
-                    <tr class="text-center">
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->Barang->Kategori->kategori }}</td>
-                        <td>{{ $item->Barang->nama_barang }}</td>
-                        <td>{{ $item->qty }}</td>
-                        <td>{{ $item->Satuan->satuan }}</td>
-                        <td>{{ "Rp. " .  number_format($item->harga_jual, 0, ",", ".") }}</td>
-                        <td>{{ $item->keterangan }}</td>
-                        <td>
-                            <div class="btn-group">
-                                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalEditBarang"  wire:click="setEditBarang({{ $item->id }})"><i class="fa fa-edit" aria-hidden="true"></i></button>
-                                <button class="btn btn-danger btn-sm" wire:click="removeItemBarang({{ $item->id }})"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        @if (COUNT($barangFix)>0)
-            @if (COUNT($barangFix )>=$limitPerPage)
-                <div>
-                    <div class="d-flex justify-content-center mb-3">
-                        <button class="btn btn-primary btn-sm" wire:loading.flex wire:target="loadMore"><span><b><i class="fas fa-circle-notch fa-spin "></i> Loading</b></span></button>
-                        <button class="btn btn-primary btn-sm" wire:click="loadMore()"  wire:loading.remove wire:target="loadMore"><b>Lihat lainnya</b></button>
+            <div class="card-body">
+                <div class="form-group">
+                    <div class="input-group input-group">
+                        <input type="search" class="form-control form-control" placeholder="Cari Barang" wire:model="search">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn btn-default">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            @endif
-        @else
-            <div wire:loading.remove>
-                <div class="alert alert-danger" role="alert">
-                    <p>Tidak Ada Datanya! </p>
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-12 mb-2">
+                            <button class="btn btn-info btn-sm"style="width: 100%"><b><i class="fas fa-users"></i> Total Barang : {{ count($barangFix) }}</b> </button>
+                        </div>
+                    </div>
+                    <table class="table" id="tokoPelanggans-table">
+                        <thead>
+                            <tr class="text-center">
+                                <th>No</th>
+                                <th>Kategori</th>
+                                <th>Nama Barang</th>
+                                <th>Qty</th>
+                                <th>Satuan</th>
+                                <th>Harga</th>
+                                <th>Keterangan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            @foreach ($barangFix as $item)
+                                <tr class="text-center">
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $item->Barang->Kategori->kategori }}</td>
+                                    <td>{{ $item->Barang->nama_barang }}</td>
+                                    <td>{{ $item->qty }}</td>
+                                    <td>{{ $item->Satuan->satuan }}</td>
+                                    <td>{{ "Rp. " .  number_format($item->harga_jual, 0, ",", ".") }}</td>
+                                    <td>{{ $item->keterangan }}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalEditBarang"  wire:click="setEditBarang({{ $item->id }})"><i class="fa fa-edit" aria-hidden="true"></i></button>
+                                            <button class="btn btn-danger btn-sm" wire:click="removeItemBarang({{ $item->id }})"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    @if (COUNT($barangFix)>0)
+                        @if (COUNT($barangFix )>=$limitPerPage)
+                            <div>
+                                <div class="d-flex justify-content-center mb-3">
+                                    <button class="btn btn-primary btn-sm" wire:loading.flex wire:target="loadMore"><span><b><i class="fas fa-circle-notch fa-spin "></i> Loading</b></span></button>
+                                    <button class="btn btn-primary btn-sm" wire:click="loadMore()"  wire:loading.remove wire:target="loadMore"><b>Lihat lainnya</b></button>
+                                </div>
+                            </div>
+                        @endif
+                    @else
+                        <div wire:loading.remove>
+                            <div class="alert alert-info" role="alert">
+                                <p>Belum ada data! </p>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
-        @endif
+        </div>
     </div>
+    
     <div class="modal fade" id="modalEditBarang"  wire:ignore.self>
         <div class="modal-dialog modal-lg"  wire:ignore.self>
             <div class="modal-content"  wire:ignore.self>
@@ -151,7 +167,7 @@
             </div>
         </div>
     </div>
-    <div wire:poll.5000ms>
+    <div>
         @if (session()->has('message-success'))
             <script>
                 Toast.fire({

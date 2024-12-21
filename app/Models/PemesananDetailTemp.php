@@ -20,5 +20,9 @@ class PemesananDetailTemp extends Model
     {
         return $this->belongsTo(\App\Models\BarangSatuan::class, 'id_satuan')->withTrashed();
     }
+    function barangHargaFix()
+    {
+        return $this->belongsTo(\App\Models\BarangHargaFix::class, 'id_harga_fix')->withTrashed();
+    }
 
 }

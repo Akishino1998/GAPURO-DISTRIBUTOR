@@ -12,28 +12,41 @@ class Proses extends Component
     public function mount($pemesanan){
         $this->pemesanan = $pemesanan;
     }
+    public $keterangan_batal;
     function batalkanPemesanan(){
         $pemesanan = Pemesanan::find($this->pemesanan->id);
         $pemesanan->status = 0;
+        $pemesanan->keterangan_batal = $this->keterangan_batal;
         $pemesanan->save();
+        $pemesanan->setTimelinePemesanan($pemesanan->id);
+
         session()->flash('message-success', "Data berhasil diubah!");
     }
     function kirimPenawaran(){
         $pemesanan = Pemesanan::find($this->pemesanan->id);
         $pemesanan->status = 3;
         $pemesanan->save();
+
+        $pemesanan->setTimelinePemesanan($pemesanan->id);
+
         session()->flash('message-success', "Data berhasil diubah!");
     }
     function mulaiPembelian(){
         $pemesanan = Pemesanan::find($this->pemesanan->id);
         $pemesanan->status = 4;
         $pemesanan->save();
+
+        $pemesanan->setTimelinePemesanan($pemesanan->id);
+
         session()->flash('message-success', "Data berhasil diubah!");
     }
     function mulaiPengiriman(){
         $pemesanan = Pemesanan::find($this->pemesanan->id);
         $pemesanan->status = 6;
         $pemesanan->save();
+
+        $pemesanan->setTimelinePemesanan($pemesanan->id);
+
         session()->flash('message-success', "Data berhasil diubah!");
     }
     public $harga_modal_total, $barangSelect;
@@ -57,6 +70,15 @@ class Proses extends Component
             $this->barangSelect = "";
             session()->flash('message-success', "Data berhasil diubah!");
         }
+    }
+    function barangSampai(){
+        $pemesanan = Pemesanan::find($this->pemesanan->id);
+        $pemesanan->status = 5;
+        $pemesanan->save();
+
+        $pemesanan->setTimelinePemesanan($pemesanan->id);
+
+        session()->flash('message-success', "Data berhasil diubah!");
     }
     public function render()
     {

@@ -88,7 +88,7 @@ class Pemesanan extends Model
         }else if ($status == 7) {
             return asset('img/status/stat06.png');
         }else if ($status == 8) {
-            return asset('img/status/stat10.png');//change
+            return asset('img/status/stat10.png');
         }else if ($status == 9) {
             return asset('img/status/stat09.png');
         }

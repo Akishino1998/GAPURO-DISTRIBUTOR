@@ -77,7 +77,9 @@
 									<th>Tgl. Permintaan</th>
 									<th>Nama Pemesanan</th>
 									<th>Status</th>
-									<th>Aksi</th>
+									@if (auth()->user()->id_role == 1)
+										<th>Aksi</th>
+									@endif
 								</tr>
 							</thead>
 							<tbody class="text-center">
@@ -87,7 +89,9 @@
 										<td class="text-center">{{ $item->User->name }}</td>
 										<td class="text-center">{{ date("d F Y", strtotime($item->tgl_pemesanan)) }}</td>
 										<td class="text-center">{!! $item->status($item->status) !!}</td>
-										<td class="text-center"><a class="btn btn-info btn-sm" target="_blank" href="{{ route('admin.pemesanan.show',$item->id) }}"> <i class="fas fa-eye    "></i></a></td>
+										@if (auth()->user()->id_role == 1)
+											<td class="text-center"><a class="btn btn-info btn-sm" target="_blank" href="{{ route('admin.pemesanan.show',$item->id) }}"> <i class="fas fa-eye    "></i></a></td>
+										@endif
 									</tr>
 								@endforeach
 							</tbody>

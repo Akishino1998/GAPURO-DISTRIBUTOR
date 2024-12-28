@@ -9,9 +9,7 @@
     input[type=radio]:not(:disabled)~label {
         cursor: pointer;
     }
-    th{
-        vertical-align:middle !important
-    }
+
 </style>
 @endsection
 <div>
@@ -19,44 +17,49 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">
-                    <a href="{{ route('admin.pemesanan.show',$pemesanan->id) }}" class="btn btn-primary btn-sm"><strong><i class="fas fa-backward    "></i> Kembali</strong></a>  <strong>Informasi Penerimaan Barang</strong>
+                    <a href="{{ route('pemesanan.show',$pemesanan->id) }}" class="btn btn-primary btn-sm"><strong><i class="fas fa-backward    "></i> Kembali</strong></a>  <strong>Informasi Harga Barang</strong>
                 </h3>
                 <div class="card-option float-right">
-                    @if ($pemesanan->cekStatusPenerimaan($pemesanan->id) && $pemesanan->status == 5 && $pemesanan->tgl_selesai_konsumen != null)
-                        <button data-toggle="modal" data-target="#modalPenerimaan" class="btn btn-success btn-sm"><strong><i class="fas fa-user-check"></i> Semua barang sudah sesuai?</strong></button>
+                    @if ($pemesanan->status == 5)
+                        @if ($pemesanan->tgl_selesai_konsumen == null)
+                            <button data-toggle="modal" data-target="#modalPenerimaan" class="btn btn-success btn-sm"><strong><i class="fas fa-user-check"></i> Semua Barang Yang Diterima Sesuai?</strong></button>
+                        @else
+                            <button class="btn btn-warning btn-sm"><strong><i class="fas fa-user-clock"></i> Admin sedang verifikasi pemesananmu</strong></button>
+                        @endif
+                    @elseif($pemesanan->status == 7)
+                        <button data-toggle="modal" data-target="#modalPesananDiterima" class="btn btn-warning btn-sm"><i class="fas fa-hands"></i>  Pesanan sudah diterima?</button>
+                    @else
+                        <button class="btn btn-success btn-sm"><strong><i class="fas fa-tasks"></i> Pemesanan Sudah Selesai</strong></button>
                     @endif
                 </div>
             </div>
             <div class="card-body">
                 <div class="card card-primary card-outline">
-                    <table class="table table-sm table-striped table-hover " id="servisan-table" >
-                        <thead>
+                    <table class="table table-sm table-striped table-hover " id="servisan-table" wire:ignore.self="">
+                        <thead wire:ignore="">
                             <tr class="text-center">
-                                <th rowspan="2">No</th>
-                                <th rowspan="2">Nama Barang</th>
-                                <th rowspan="2">Harga Per Satuan </th>
-                                <th rowspan="2">Qty Permintaan</th>
-                                <th rowspan="2">Satuan</th>
-                                <th colspan="2">Verifikasi Qty</thco>
-                                <th rowspan="2">#</th>
-                            </tr>
-                            <tr class="text-center">
-                                <th>Admin</th>
-                                <th>Konsumen</th>
+                                <th>No</th>
+                                <th>Nama Barang</th>
+                                <th>Harga Per Satuan </th>
+                                <th>Qty Permintaan</th>
+                                <th>Satuan</th>
+                                <th>Qty Diterima</th>
+                                <th>#</th>
                             </tr>
                         </thead>
                         <tbody class="text-center">
                             @foreach ($pemesanan->PemesananDetail->where('status_tersedia',2) as $item)
-                            <tr class="text-center" @if($item->qty_diterima == $item->qty_diterima_user && $item->qty_diterima != null && $item->qty_diterima_user != null) style="background:rgb(207 248 200)" @endif>
+                            <tr class="text-center"  @if($item->qty_diterima_user != null) style="background:rgb(207 248 200)" @endif>
                                 <td>{{ $loop->iteration }}</td>
                                 <td><span class="badge bg-info">{{ $item->Barang->Kategori->kategori }}</span> {{ $item->Barang->nama_barang }}</td>
                                 <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format($item->harga_per_satuan, 0, ",", ".") }}</td>
                                 <td>{{ $item->qty }}</td>
                                 <td>{{ $item->Satuan->satuan }}</td>
-                                <td>{{ $item->qty_diterima }}</td>
                                 <td>{{ $item->qty_diterima_user }}</td>
                                 <td>
-                                    <button class="btn btn-{{ ($item->qty_diterima==null)?'warning':'success' }} btn-sm" data-toggle="modal" data-target="#modalStatusBarang"  wire:click="setEditHarga({{ $item->id }})"><i class="fas fa-tasks"></i></button>
+                                    @if ($pemesanan->status == 5)
+                                        <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalStatusBarang"  wire:click="setEditHarga({{ $item->id }})"><i class="fas fa-check-double"></i></button>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach
@@ -129,6 +132,37 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modalPesananDiterima"  wire:ignore.self>
+        <div class="modal-dialog"  wire:ignore.self>
+            <div class="modal-content"  wire:ignore.self>
+                <form wire:submit.prevent="pesananDiterima">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ubah Informasi Pemesanan</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="callout callout-warning">
+                            <h5><i class="fas fa-info"></i> Note:</h5>
+                            Pesanan sudah diterima?
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="closeModalPesananDiterima" data-dismiss="modal" >Batal</button>
+                        <button class="btn btn-warning" type="submit" >
+                            <div wire:loading.remove="" wire:target="pesananDiterima">
+                                <strong style="color: white"><i class="fas fa-check-double"></i> Lanjutkan</strong>
+                            </div>
+                            <div wire:loading="" wire:target="pesananDiterima">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="modalPenerimaan"  wire:ignore.self>
         <div class="modal-dialog"  wire:ignore.self>
             <div class="modal-content"  wire:ignore.self>
@@ -144,7 +178,7 @@
                             <div class="col-12">
                                 <div class="callout callout-info">
                                     <h5><i class="fas fa-info"></i> Note:</h5>
-                                    Barang sudah diterima semua oleh konsumen?
+                                    Semua pesanan yang diterima telah sesuai!
                                 </div>
                             </div>
                         </div>
@@ -153,7 +187,7 @@
                         <button type="button" class="btn btn-secondary" id="closeModalPenerimaanBarang" data-dismiss="modal" >Batal</button>
                         <button class="btn btn-success" type="submit" >
                             <div wire:loading.remove="" wire:target="penerimaanBarang">
-                                <strong style="color: white"><i class="fas fa-user-check"></i>Simpan</strong>
+                                <strong style="color: white"><i class="fas fa-user-check"></i> Selesai</strong>
                             </div>
                             <div wire:loading="" wire:target="penerimaanBarang">
                                 <i class="fas fa-circle-notch fa-spin"></i>
@@ -173,6 +207,7 @@
                 });
                 $('#closeModalEditStatus').click(); 
                 $('#closeModalPenerimaanBarang').click(); 
+                $('#closeModalPesananDiterima').click(); 
             </script>
         @endif
         @if (session()->has('message-failed'))

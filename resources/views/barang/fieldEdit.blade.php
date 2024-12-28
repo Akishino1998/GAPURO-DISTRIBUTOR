@@ -101,14 +101,14 @@
                     Cantumkan min. 20 karakter agar semakin menarik dan mudah ditemukan oleh pembeli, terdiri dari jenis produk, merek, dan keterangan seperti warna, bahan, atau tipe.
                 </p>
             </div>
-            <div class="form-group col-sm-12 mb-2" >
+            {{-- <div class="form-group col-sm-12 mb-2" >
                 <label class="form-label"> Merk</label>
                 <select class="form-control select2-merk" data-placeholder="Pilih Merk Dari Barangmu" name="id_merk" >
                     @foreach ($merk as $item)
                         <option value="{{ $item->id }}"  {{ ($item->id == $barang->id_merk)?"selected":""  }}>{{ $item->merk }}</option>
                     @endforeach
                 </select>
-            </div>
+            </div> --}}
             <div class="form-group col-sm-12">
                 <label class="form-label"> Satuan <span class="badge bg-primary">Wajib</span></label>
                 <select class="form-control select2-merk" data-placeholder="Pilih Satuan" name="id_satuan" required>

@@ -21,6 +21,17 @@
                 </h3>
                 <div class="card-options float-right">
                     @if (auth()->user()->id_role == 1)
+                        @if ($pemesanan->Invoice != null)
+                            <a href="{{ route('admin.pemesanan.invoice',$pemesanan->id) }}" class="btn btn-info btn-sm"><i class="fas fa-file-invoice"></i> Invoice 
+                                @if ($pemesanan->Invoice->status == 1)
+                                    <span class="badge bg-secondary"><i class="fas fa-spinner fa-spin"></i> Belum Diproses</span>
+                                @elseif ($pemesanan->Invoice->status == 2)
+                                    <span class="badge bg-primary"><i class="fas fa-file-invoice"></i> Terbit</span>
+                                @elseif ($pemesanan->Invoice->status == 3)
+                                    <span class="badge bg-success">Lunas</span>
+                                @endif
+                            </a>
+                        @endif
                         @if ($pemesanan->status == 1)
                             <button data-toggle="modal" data-target="#modalProsesPemesanan" class="btn btn-success btn-sm"><i class="fas fa-shopping-basket"></i> Proses Pemesanan</button>
                         @endif
@@ -51,19 +62,18 @@
                             <button data-toggle="modal" data-target="#modalBarangSampai" class="btn btn-primary btn-sm"><i class="fas fa-truck-loading"></i> Barang Sudah Sampai</button>
                         @endif
                         @if ($pemesanan->status == 5)
-                            <a href="{{ route('admin.pemesanan.penerimaan',$pemesanan->id) }}" class="btn btn-warning btn-sm"><strong><i class="fas fa-people-carry"></i> Barang Diterima </strong></a>
+                            <a href="{{ route('admin.pemesanan.penerimaan',$pemesanan->id) }}" class="btn btn-warning btn-sm"><strong><i class="fas fa-tasks"></i>  Verifikasi Pemesanan </strong></a>
                   
                         @endif
                         @if ($pemesanan->status == 7)
                             <button class="btn btn-info btn-sm"><i class="fas fa-user-check"></i> Menunggu konsumen konfirmasi selesai</button>
                         @endif
+                      
                     @endif
                 </div>
             </div>
             <div class="card-body">
-              
                 <div class="row">
-    
                     <div class="col-md-8">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
@@ -103,6 +113,11 @@
                                                         <strong><span class="badge bg-info"><i class="fas fa-shopping-basket"></i> Lengkap</span></strong>
                                                     @endif
                                                 @endif
+                                                @if ($pemesanan->Invoice != null)
+                                                    @if ($pemesanan->Invoice->status == 3)
+                                                        <strong><span class="badge bg-success"><i class="fas fa-file-invoice    "></i> Lunas</span></strong>
+                                                    @endif
+                                                @endif
                                             </td>
                                         </tr>
                                     </tbody>
@@ -132,6 +147,7 @@
                                 Pesanan dibatalkan! Keterangan: {{ $pemesanan->keterangan_batal }}
                             </div>
                         @endif
+                     
                         <div class="card card-primary card-outline">
                             <table class="table table-sm table-striped table-hover " id="servisan-table">
                                 <thead>
@@ -171,7 +187,6 @@
                                             <td>{{ ($item->keterangan==null)?'-':$item->keterangan }}</td>
                                             @if ($pemesanan->status == 4)
                                                 <td>{{ ($item->harga_modal_total==null)?"-":"Rp. " .  number_format($item->harga_modal_total, 0, ",", ".") }}
-                                               
                                             @endif
                                         </tr>
                                     @endforeach
@@ -187,6 +202,9 @@
                                             <td>{{ ($item->harga_jual==null)?"-":"Rp. " .  number_format($item->harga_per_satuan*$item->qty, 0, ",", ".") }}
                                             </td>
                                             <td>{{ ($item->keterangan==null)?'-':$item->keterangan }}</td>
+                                            @if ($pemesanan->status == 4)
+                                                <td></td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -197,7 +215,7 @@
                                 </div>
                             @endif
                         </div>
-                        @if (in_array($pemesanan->status, [1,2,3]))
+                        @if (in_array($pemesanan->status, [2,3]))
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
                                     <h3 class="card-title"><strong>Request Pemesanan </strong>
@@ -236,8 +254,7 @@
                             </div>
                         @endif
                     </div>
-                    <div class="col-md-4 col-sm-12">
-                        
+                    <div class="col-md-4">
                         <div class="card card-primary card-outline">
                             <div class="card-body">
                                 <img src="{{ $pemesanan->imgStatus($pemesanan->status) }}" alt="" width="50%" style="

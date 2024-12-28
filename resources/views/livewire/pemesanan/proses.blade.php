@@ -31,48 +31,55 @@
                         @endif
                     @elseif($pemesanan->status == 7)
                         <button data-toggle="modal" data-target="#modalPesananDiterima" class="btn btn-warning btn-sm"><i class="fas fa-hands"></i>  Pesanan sudah diterima?</button>
-                    
+                    @elseif($pemesanan->status == 5)
+                        <button class="btn btn-{{ $pemesanan->colorStatus($pemesanan->status) }} btn-sm">{!! $pemesanan->status($pemesanan->status) !!} </button>
+                        <a href="{{ route('pemesanan.verifikasi',$pemesanan->id) }}" class="btn btn-warning btn-sm"><strong><i class="fas fa-tasks"></i> Verifikasi Pesanan</strong></a>
                     @else
-                        <button class="btn btn-{{ $pemesanan->colorStatus($pemesanan->status) }} btn-sm">{!! $pemesanan->status($pemesanan->status) !!}</button>
+                        <button class="btn btn-{{ $pemesanan->colorStatus($pemesanan->status) }} btn-sm">{!! $pemesanan->status($pemesanan->status) !!} </button>
                     @endif
                 </div>
             </div>
             <div class="card-body">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title"><strong>Informasi Pemesanan </strong>
-                            <div wire:loading="">
-                                <i class="fas fa-circle-notch fa-spin"></i>
-                            </div>
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>Nama Pemesan</td>
-                                    <td>:</td>
-                                    <td><strong>{{ $pemesanan->User->name }}</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>No. HP / WA</td>
-                                    <td>:</td>
-                                    <td><strong>081254893451</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>Status Pemesanan</td>
-                                    <td>:</td>
-                                    <td>
-                                        <strong>{!! $pemesanan->status($pemesanan->status) !!}</strong>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="row">
                
+                <div class="row">
                     <div class="col-md-8">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><strong>Informasi Pemesanan </strong>
+                                    <div wire:loading="">
+                                        <i class="fas fa-circle-notch fa-spin"></i>
+                                    </div>
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>Nama Pemesan</td>
+                                            <td>:</td>
+                                            <td><strong>{{ $pemesanan->User->name }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>No. HP / WA</td>
+                                            <td>:</td>
+                                            <td><strong>081254893451</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Status Pemesanan</td>
+                                            <td>:</td>
+                                            <td>
+                                                <strong>{!! $pemesanan->status($pemesanan->status) !!}</strong>
+                                                @if ($pemesanan->Invoice != null)
+                                                    @if ($pemesanan->Invoice->status == 3)
+                                                        <strong><span class="badge bg-success"><i class="fas fa-file-invoice    "></i> Lunas</span></strong>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                         @if( $pemesanan->status == 3)
                             <div class="callout callout-info">
                                 <h5><i class="fas fa-info"></i> Note:</h5>
@@ -174,7 +181,12 @@
                     <div class="col-md-4 col-sm-12">
                         <div class="card card-primary card-outline">
                             <div class="card-body">
-                                
+                                <img src="{{ $pemesanan->imgStatus($pemesanan->status) }}" alt="" width="50%" style="
+                                    display: block;
+                                    margin-left: auto;
+                                    margin-right: auto;
+                                    width: 50%;">
+                                    <hr>
                                 <div class="timeline" style="margin: 0px">
                                     @foreach ($pemesanan->PemesananTimeLine as $item)
                                         <div class="time-label">
@@ -197,7 +209,6 @@
                         </div>
                     </div>
                 </div>
-               
             </div>
         </div>
     </div>

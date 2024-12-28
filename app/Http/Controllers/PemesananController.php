@@ -27,4 +27,11 @@ class PemesananController extends Controller
         }
         return view('pemesanan.cekHarga',compact('pemesanan'));
     }
+    function verifikasi($id){
+        $pemesanan = Pemesanan::find($id);
+        if ($pemesanan == null) {
+            return redirect(route('pemesanan.index'));
+        }
+        return view('pemesanan.verifikasi',compact('pemesanan'));
+    }
 }

@@ -98,7 +98,7 @@
                 </p>
             </div>
 
-            <div class="form-group col-sm-12">
+            {{-- <div class="form-group col-sm-12">
                 <label class="form-label"> Merk</label>
                 <select class="form-control select2-merk" data-placeholder="Pilih Merk" name="id_merk">
                     <option value="">--- Pilih Merk ---</option>
@@ -106,7 +106,7 @@
                         <option value="{{ $item->id }}">{{ $item->merk }}</option>
                     @endforeach
                 </select>
-            </div>
+            </div> --}}
 
             <div class="form-group col-sm-12">
                 <label class="form-label"> Satuan <span class="badge bg-primary">Wajib</span></label>

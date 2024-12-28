@@ -42,8 +42,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->Barang->Kategori->kategori }}</td>
                                 <td>{{ $item->Barang->nama_barang }}</td>
-                                <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format($item->harga_per_satuan, 0, ",", ".") }}
-                                </td>
+                                <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format($item->harga_per_satuan, 0, ",", ".") }}</td>
                                 <td>{{ $item->qty }}</td>
                                 <td>{{ $item->Satuan->satuan }}</td>
                                 <td>{{ ($item->harga_jual==null)?"-":"Rp. " .  number_format($item->harga_per_satuan*$item->qty, 0, ",", ".") }}
@@ -106,7 +105,7 @@
                                             </table>
                                             <hr>
                                             <div class="form-group">
-                                                <label>Harga</label>
+                                                <label>Harga Per Satuan <span class="badge bg-primary">Wajib</span></label>
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">Rp</span>

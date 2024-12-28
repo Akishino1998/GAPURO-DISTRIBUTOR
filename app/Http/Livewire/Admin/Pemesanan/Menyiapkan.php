@@ -9,6 +9,7 @@ use Livewire\Component;
 class Menyiapkan extends Component
 {
     public $pemesanan;
+    protected $listeners = ['editHarga'];
     public function mount($pemesanan){
         $this->pemesanan = $pemesanan;
     }

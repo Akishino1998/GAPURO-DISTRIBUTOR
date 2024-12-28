@@ -47,6 +47,8 @@ class Pemesanan extends Model
             return '<span class="badge bg-success"><i class="fas fa-user-check"></i> Telah diserahkan ke konsumen</span>';
         }else if ($status == 8) {
             return '<span class="badge bg-success"><i class="fas fa-user-check"></i> Sudah diterima, menunggu pembayaran</span>';
+        }else if ($status == 9) {
+            return '<span class="badge bg-success"><i class="fas fa-user-check"></i> Sudah diterima</span>';
         }
     }
     function colorStatus($status){
@@ -67,6 +69,8 @@ class Pemesanan extends Model
         }else if ($status == 7) {
             return 'success';
         }else if ($status == 8) {
+            return 'success';
+        }else if ($status == 9) {
             return 'success';
         }
     }
@@ -188,6 +192,16 @@ class Pemesanan extends Model
         }
         return ($cekPembelian>=COUNT($pemesanan->PemesananDetail->where('status_tersedia',2)))?true:false;
     }
+    function cekStatusPenerimaanKonsumen($id){
+        $pemesanan = Pemesanan::find($id);
+        $cekPembelian = 0;
+        foreach ($pemesanan->PemesananDetail->where('status_tersedia',2) as $item) {
+            if ($item->tgl_diterima_user == null || $item->tgl_diterima == null ) {
+                $cekPembelian++;
+            }
+        }
+        return ($cekPembelian==0)?true:false;
+    }
     public function UNIQUE_KODE(){
         $ts = strtotime(NOW());
         $first_day_this_month = date('Y-m-01 00:00:00',$ts);
@@ -212,6 +226,10 @@ class Pemesanan extends Model
     public function User()
     {
         return $this->belongsTo(User::class, 'id_user', 'id');
+    }
+    public function Invoice()
+    {
+        return $this->hasOne(Invoice::class, 'id_pemesanan', 'id');
     }
 
 }

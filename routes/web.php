@@ -28,6 +28,13 @@ Route::get('/', function () {
                 Route::get('/set-harga/{id}', [App\Http\Controllers\Admin\PemesananController::class, 'setHarga'])->name('setHarga');
                 Route::get('/penerimaan/{id}', [App\Http\Controllers\Admin\PemesananController::class, 'penerimaan'])->name('penerimaan');
                 Route::get('/menyiapkan/{id}', [App\Http\Controllers\Admin\PemesananController::class, 'menyiapkan'])->name('menyiapkan');
+                Route::get('/menyiapkan/{id}/print', [App\Http\Controllers\Admin\PemesananController::class, 'menyiapkanPrint'])->name('menyiapkanPrint');
+                Route::get('/invoice/{id}', [App\Http\Controllers\Admin\PemesananController::class, 'invoice'])->name('invoice');
+                Route::post('/invoice/{id}', [App\Http\Controllers\Admin\PemesananController::class, 'invoiceSimpan'])->name('invoiceSimpan');
+                Route::post('/invoice/{id}/bayar', [App\Http\Controllers\Admin\PemesananController::class, 'invoiceBayar'])->name('invoiceBayar');
+                Route::get('/invoice/{id}/print', [App\Http\Controllers\Admin\PemesananController::class, 'invoicePrint'])->name('invoicePrint');
+                Route::get('/invoice/{id}/terbit', [App\Http\Controllers\Admin\PemesananController::class, 'invoiceTerbit'])->name('invoiceTerbit');
+                Route::get('/invoice/{id}/download', [App\Http\Controllers\Admin\PemesananController::class, 'invoiceDownload'])->name('invoiceDownload');
             });
 
             Route::resource('pemesanan', App\Http\Controllers\Admin\PemesananController::class);
@@ -39,11 +46,10 @@ Route::get('/', function () {
         Route::resource('konsumen', App\Http\Controllers\KonsumenController::class);
 
         Route::group(['prefix'=>'pemesanan','as'=>'pemesanan.' ],function () {
+            Route::get('/verifikasi/{id}', [App\Http\Controllers\PemesananController::class, 'verifikasi'])->name('verifikasi');
             Route::get('/cek-harga/{id}', [App\Http\Controllers\PemesananController::class, 'cekHarga'])->name('cekHarga');
         });
         Route::resource('pemesanan', App\Http\Controllers\PemesananController::class);
-
-
     });
 // });
 

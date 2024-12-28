@@ -19,6 +19,9 @@
                 <h3 class="card-title">
                     <a href="{{ route('admin.pemesanan.show',$pemesanan->id) }}" class="btn btn-primary btn-sm"><strong><i class="fas fa-backward    "></i> Kembali</strong></a>  <strong>Informasi Harga Barang</strong>
                 </h3>
+                <div class="card-options float-right">
+                    <a href="{{ route('admin.pemesanan.menyiapkanPrint',$pemesanan->id) }}" target="_blank" class="btn btn-primary btn-sm"><i class="fas fa-print    "></i> Print </a>
+                </div>    
             </div>
             <div class="card-body">
                 <div class="card card-primary card-outline">
@@ -79,6 +82,9 @@
                                     <td>{{ ($item->harga_jual==null)?"-":"Rp. " .  number_format($item->harga_per_satuan*$item->qty, 0, ",", ".") }}
                                     </td>
                                     <td>{{ ($item->keterangan==null)?'-':$item->keterangan }}</td>
+                                    @if ($pemesanan->status == 4)
+                                        <td colspan="2"></td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
@@ -158,6 +164,9 @@
                                                     <input type="text" class="form-control uang  @error('harga_modal_total') is-invalid @enderror" wire:model="harga_modal_total" placeholder="Harga">
                                                     @error('harga_modal_total') <span class="error invalid-feedback">{{ $message }}</span> @enderror
                                                 </div>
+                                                <p class=" mt-1">
+                                                    Total modal yang digunakan untuk pembelian barang tersebut (qty x harga per qty)
+                                                </p>
                                             </div>
                                             <script>
                                                 $(document).ready(function () {

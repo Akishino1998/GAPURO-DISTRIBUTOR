@@ -10,6 +10,9 @@ class SetHarga extends Component
 {
     public $pemesanan;
     public $barangSelect ;
+    protected $listeners = [
+        'editHarga'
+    ];
     public function mount($pemesanan){
         $this->pemesanan = $pemesanan;
     }

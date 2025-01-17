@@ -34,4 +34,11 @@ class PemesananController extends Controller
         }
         return view('pemesanan.verifikasi',compact('pemesanan'));
     }
+    function invoicePemesanan($id){
+        $pemesanan = Pemesanan::find($id);
+        if ($pemesanan->Invoice == null) {
+            return redirect(route('pemesanan.index'));
+        }
+        return view('pemesanan.invoice',compact('pemesanan'));
+    }
 }

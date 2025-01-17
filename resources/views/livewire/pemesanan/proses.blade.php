@@ -17,7 +17,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">
-                    <a href="{{ route('admin.pemesanan.index') }}" class="btn btn-primary btn-sm"><strong><i class="fas fa-backward    "></i> Kembali</strong></a>  <strong>Informasi Pemesanan</strong>
+                    <a href="{{ route('pemesanan.index') }}" class="btn btn-primary btn-sm"><strong><i class="fas fa-backward    "></i> Kembali</strong></a>  <strong>Informasi Pemesanan</strong>
                 </h3>
                 <div class="card-options float-right">
        
@@ -36,6 +36,10 @@
                         <a href="{{ route('pemesanan.verifikasi',$pemesanan->id) }}" class="btn btn-warning btn-sm"><strong><i class="fas fa-tasks"></i> Verifikasi Pesanan</strong></a>
                     @else
                         <button class="btn btn-{{ $pemesanan->colorStatus($pemesanan->status) }} btn-sm">{!! $pemesanan->status($pemesanan->status) !!} </button>
+                    @endif
+
+                    @if ($pemesanan->Invoice != null)
+                        <a href="{{ route('invoicePemesanan',$pemesanan->id) }}" class="btn btn-info btn-sm"><i class="fas fa-file-invoice"></i> Invoice </a>
                     @endif
                 </div>
             </div>

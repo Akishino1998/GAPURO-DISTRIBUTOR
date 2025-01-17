@@ -23,6 +23,13 @@ class Invoice extends Model
         $today = date("dmy");
         return "INV/0".$idToko."/".$totalUser."/".$today;
     } 
+    function colorStatus($stat){
+        if($stat == 1){
+            return 'secondary';
+        }elseif($stat == 1){
+        }elseif($stat == 1){
+        }
+    }
     public function Konsumen()
     {
         return $this->belongsTo(User::class, 'id_user', 'id');
@@ -30,5 +37,9 @@ class Invoice extends Model
     public function Bank()
     {
         return $this->belongsTo(Bank::class, 'id_bank', 'id');
+    }
+    public function Pemesanan()
+    {
+        return $this->belongsTo(Pemesanan::class, 'id_pemesanan', 'id');
     }
 }

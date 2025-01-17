@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 require __DIR__.'/auth.php';
 
 Route::get('/', function () {
-    return redirect(route('dashboard'));
+    return view('profil.index');
 });
 
 // Route::group(['middleware'=>['Log'] ],function () {
@@ -36,8 +36,8 @@ Route::get('/', function () {
                 Route::get('/invoice/{id}/terbit', [App\Http\Controllers\Admin\PemesananController::class, 'invoiceTerbit'])->name('invoiceTerbit');
                 Route::get('/invoice/{id}/download', [App\Http\Controllers\Admin\PemesananController::class, 'invoiceDownload'])->name('invoiceDownload');
             });
-
             Route::resource('pemesanan', App\Http\Controllers\Admin\PemesananController::class);
+            Route::resource('invoice', App\Http\Controllers\Admin\InvoiceController::class);
         });
         Route::resource('barang', App\Http\Controllers\BarangController::class);
         Route::resource('toko', App\Http\Controllers\TokoController::class);
@@ -49,6 +49,7 @@ Route::get('/', function () {
             Route::get('/verifikasi/{id}', [App\Http\Controllers\PemesananController::class, 'verifikasi'])->name('verifikasi');
             Route::get('/cek-harga/{id}', [App\Http\Controllers\PemesananController::class, 'cekHarga'])->name('cekHarga');
         });
+        Route::get('/pemesanan/{id}/invoice', [App\Http\Controllers\PemesananController::class, 'invoicePemesanan'])->name('invoicePemesanan');
         Route::resource('pemesanan', App\Http\Controllers\PemesananController::class);
     });
 // });

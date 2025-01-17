@@ -13,21 +13,6 @@ class Pemesanan extends Model
     use SoftDeletes;
     public $table = 'pemesanan';
     protected $dates = ['deleted_at'];
-    // 0 batal
-    // 1 belum diproses
-    // 2 penentuan harga
-    // 3 penawaran harga
-    // 4 barang disiapkan
-
-    // 5 barang sudah siap, menunggu pengiriman
-
-    // 6 barang dalam perjalanan
-    // 7 barang sudah tiba, proses cek kurir dan konsumen
-
-    // 8 barang sesuai dan selesai belum dibayar
-    // 9 barang kurang
-    // 10 selesai, belum dibayar
-    // 11 lunas
     function status($status){
         if($status == 0){
             return '<strong><span class="badge bg-danger"><i class="fas fa-times"></i> Dibatalkan</span></strong>';
@@ -135,7 +120,16 @@ class Pemesanan extends Model
             $timeline->keterangan = "Pemesanan selesai!";
             $timeline->save();
         }
-
+    }
+    function totalPemesanan($id){
+        $pemesanan = Pemesanan::find($id);
+        $total = 0;
+        $pajak = 0;
+        foreach ($pemesanan->PemesananDetail->where('status_tersedia',1) as $item) {
+            $pajak += (($item->harga_per_satuan*$item->qty)*0.015);
+            $total+=($item->harga_per_satuan*$item->qty)+(($item->harga_per_satuan*$item->qty)*0.015);
+        }
+        return $total;
     }
     function cekStatusHarga($id){
         $pemesanan = Pemesanan::find($id);

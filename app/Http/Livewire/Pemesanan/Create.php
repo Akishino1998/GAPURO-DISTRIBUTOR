@@ -27,7 +27,11 @@ class Create extends Component
     public $limitPerPage = 20;
     public $statusHarga = false;
     public $nama_barang, $kategori_barang;
+    public $countKeranjang;
     public function mount(){
+        $tempBarang = PemesananDetailTemp::where('id_user',auth()->user()->id)->get();
+        $tempBarangRequest = PemesananRequestTemp::where('id_user',auth()->user()->id)->get();
+        $this->countKeranjang = COUNT($tempBarang)+COUNT($tempBarangRequest);
         if(COUNT(BarangHargaFix::where('id_konsumen',auth()->user()->id)->get())>0){
             $this->statusHarga = true;
         }

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="d-flex justify-content-center">
             <a href="/" class="brand-link">
-                <img src="https://apderis.com/storage/logo-toko/ITHMl5UwTI1jrscgzqNxBuwv08UIo96M0bPetAr6.png" alt="APDERIS" class="brand-image " >
+                <img src="{{ asset('profil/img/gapuro/GPA-WebAsset-02.svg') }}" alt="APDERIS" class="brand-image " style="width: 100px">
             </a>
         </div>
     </div>

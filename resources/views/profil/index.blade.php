@@ -60,6 +60,9 @@
         .we-do-content-area p{
             color: black;
         }
+        .navbar-area-two .exto-responsive-nav .mean-container a.meanmenu-reveal span{
+            background: black;
+        }
     </style>
     <title>GAPURO   </title>
 </head>

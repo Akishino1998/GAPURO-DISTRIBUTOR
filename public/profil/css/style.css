@@ -1342,10 +1342,10 @@ Navbar Area Two CSS
     display: none;
   }
   .navbar-area-two .exto-responsive-nav .mean-container a.meanmenu-reveal {
-    color: #ffffff;
+    color: black;
   }
   .navbar-area-two .exto-responsive-nav .mean-container a.meanmenu-reveal span {
-    background: #ffffff;
+    background: black;
   }
   .navbar-area-two .exto-responsive-nav .logo {
     position: relative;

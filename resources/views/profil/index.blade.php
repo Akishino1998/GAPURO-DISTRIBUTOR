@@ -51,6 +51,15 @@
         .productive-section{
             background: #116530;
         }
+        .what-we-do-section{
+            background: white !important;
+        }
+        .we-do-content-area h3{
+            color: black;
+        }
+        .we-do-content-area p{
+            color: black;
+        }
     </style>
     <title>GAPURO   </title>
 </head>
@@ -91,18 +100,15 @@
             </div>
         </div>
     </div>
-    <!-- End Navbar Area Two -->
-
-    <!-- Start Startup Home Area -->
     <div class="startup-home-area">
-        <div class="d-table" >
+        <div class="d-table" id="home" >
             <div class="d-table-cell">
                 <div class="container">
                     <div class="row align-items-center">
                         <div class="col-lg-6 col-md-12" style="z-index: 1">
                             <div class="hero-content">
                                 <span>Dari Ladang Ke Meja</span>
-                                <h1>Pangan Berkualitas Untuk Bisnis Anda</h1>
+                                <h1>Pangan Berkualitas Untuk Kebutuhan Anda</h1>
                             </div>
                         </div>
 
@@ -125,12 +131,8 @@
         <div class="shape-img4"><img src="{{ asset('profil/img/shape/4.png') }}" alt="image"></div>
         <div class="shape-img5"><img src="{{ asset('profil/img/shape/6.png') }}" alt="image"></div>
     </div>
-    <!-- End Startup Home Area -->
-
-
-    <!-- Start Productive Section -->
-    <section id="productive-section" class="productive-section pt-100 pb-70">
-        <div class="container-fluid">
+    <section id="productive-section" class="productive-section pt-100 pb-70" >
+        <div class="container-fluid" id="produk">
             <div class="productive-title">
                 <h3 style="color: white">Produk Pangan Berkualitas
                     <br>Untuk Setiap Kebutuhan</h3>
@@ -175,7 +177,7 @@
                     </div>
                     <div class="card-bottom">
                         <h3>Buah-Buahan</h3>
-                        <p>Jangkau lebih banyak pelanggan di dunia digital dan kelola bisnismu dari mana saja dan kapan saja dengan aplikasimu sendiri</p>
+                        <p>Aneka buah segar yang kaya akan rasa dan manfaat</p>
                     </div>
                 </div>
                 <div class="productive-area-item col-md-10 mx-4 creative" data-title="Lauk Pauk">
@@ -196,7 +198,7 @@
                     </div>
                     <div class="card-bottom">
                         <h3>Lauk Pauk</h3>
-                        <p>Buat desainmu menjadi lebih menarik bersama tim desainer kami yang berpengalaman dan kreatif</p>
+                        <p>Menyediakan menu berkualitas yang kaya akan protein</p>
                     </div>
                 </div>
                 <div class="productive-area-item col-md-10 mx-4 space" data-title="Susu">
@@ -213,15 +215,13 @@
                     </div>
                     <div class="card-bottom">
                         <h3>Susu</h3>
-                        <p>Tingkatkan produktivitas kerja bersama para profesional sepemikiran dalam ruangan kerja yang nyaman</p>
+                        <p>Susu segar kaya akan gizi dari peternakan terbaik</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- End Productive Section -->
-    <!-- Start What We Do Section -->
-    <section class="what-we-do-section-2">
+    <section class="what-we-do-section-2" id="about">
         <div class="what-we-do-section px-4 ptb-100" style="-webkit-border-radius:0">
             <div class="container">
                 <div class="row align-items-center">
@@ -244,9 +244,7 @@
             </div>
         </div>
     </section>
-    <!-- End What We Do Section -->
-    <!-- Start Project Section -->
-    <section class="blog-section startup-blog pt-100 pb-70">
+    <section class="blog-section startup-blog pt-100 pb-70" id="news">
         <div class="container">
             <div class="blog-title">
                 <h3>Halaman Berita</h3>
@@ -348,11 +346,7 @@
             </div>
         </div>
     </section>
-    <!-- End Project Section -->
-
-
-    <!-- Start Provide Section -->
-    <section class="provide-section ptb-100" id="about">
+    <section class="provide-section ptb-100">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-12">

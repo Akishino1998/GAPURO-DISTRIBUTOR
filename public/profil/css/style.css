@@ -3885,6 +3885,7 @@ Productive Section CSS
 .pager-item {
   margin: 12px;
   display: block;
+  color: white;
 }
 
 .productive-title span {

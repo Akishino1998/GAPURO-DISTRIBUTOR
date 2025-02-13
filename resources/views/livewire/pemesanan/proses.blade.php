@@ -20,15 +20,9 @@
                     <a href="{{ route('pemesanan.index') }}" class="btn btn-primary btn-sm"><strong><i class="fas fa-backward    "></i> Kembali</strong></a>  <strong>Informasi Pemesanan</strong>
                 </h3>
                 <div class="card-options float-right">
-       
                     @if ($pemesanan->status == 3)
                         <button data-toggle="modal" data-target="#modalBatalkanPemesanan" class="btn btn-danger btn-sm"><i class="fas fa-times-circle"></i> Batalkan Pemesanan</button>
-                        <a href="{{ route('pemesanan.cekHarga',$pemesanan->id) }}" class="btn btn-warning btn-sm"><strong><i class="fas fa-tasks"></i> Cek Barang</strong></a>
-                        @if ($pemesanan->cekStatusHargaUser($pemesanan->id)==0)
-                            <button  data-toggle="modal" data-target="#modalSetujuiBarang"  class="btn btn-{{ $pemesanan->colorStatus($pemesanan->status) }} btn-sm"><strong><i class="fas fa-clipboard-check"></i> Setujui Semua Harga</strong></button>
-                        @elseif($pemesanan->cekStatusHargaUser($pemesanan->id) < COUNT($pemesanan->PemesananDetail))
-                            <button data-toggle="modal" data-target="#modalSetujuiBarang"  class="btn btn-{{ $pemesanan->colorStatus($pemesanan->status) }} btn-sm"><strong><i class="fas fa-clipboard-check"></i> Setujui Barang Terpilih</strong></button>
-                        @endif
+                        
                     @elseif($pemesanan->status == 7)
                         <button data-toggle="modal" data-target="#modalPesananDiterima" class="btn btn-warning btn-sm"><i class="fas fa-hands"></i>  Pesanan sudah diterima?</button>
                     @elseif($pemesanan->status == 5)
@@ -41,6 +35,18 @@
                     @if ($pemesanan->Invoice != null)
                         <a href="{{ route('invoicePemesanan',$pemesanan->id) }}" class="btn btn-info btn-sm"><i class="fas fa-file-invoice"></i> Invoice </a>
                     @endif
+                    @if ($pemesanan->cekStatusTambahan($pemesanan->id))
+                        <a href="{{ route('pemesanan.cekHarga',$pemesanan->id) }}" class="btn btn-warning btn-sm"> <i class="fas fa-file-signature"></i> Setujui Pesanan Tambahanmu</a>
+                    @endif
+                    @if ($pemesanan->PemesananDetail->where('status_ditambahkan',1)->where('status_diajukan',2)->COUNT() > 0 )
+                        <a href="{{ route('pemesanan.cekHarga',$pemesanan->id) }}" class="btn btn-warning btn-sm"><strong><i class="fas fa-tasks"></i> Cek Barang</strong></a>
+                        @if ($pemesanan->cekStatusHargaUser($pemesanan->id)==0 AND $pemesanan->PemesananTambahan->where('status_ditambahkan','!=',1)->where('status_pemesanan',1)->COUNT()>0)
+                            <button  data-toggle="modal" data-target="#modalSetujuiBarang"  class="btn btn-{{ $pemesanan->colorStatus($pemesanan->status) }} btn-sm"><strong><i class="fas fa-clipboard-check"></i> Setujui Semua Harga</strong></button>
+                        @elseif($pemesanan->cekStatusHargaUser($pemesanan->id) < COUNT($pemesanan->PemesananDetail))
+                            <button data-toggle="modal" data-target="#modalSetujuiBarang"  class="btn btn-{{ $pemesanan->colorStatus($pemesanan->status) }} btn-sm"><strong><i class="fas fa-clipboard-check"></i> Setujui Barang Terpilih</strong></button>
+                        @endif
+                    @endif
+                   
                 </div>
             </div>
             <div class="card-body">
@@ -95,16 +101,32 @@
                                 Pesanan dibatalkan! Keterangan: {{ $pemesanan->keterangan_batal }}
                             </div>
                         @endif
+                        <div class="row" style="background:#F8C25C;border-radius:20px;margin:20px 0px">
+                            <div class="col-lg-4">
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{ asset('img/status/stat11.png') }}" alt="" style="width:50%">
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="d-flex flex-column flex-lg-row-auto " style="padding:50px">
+                                    <h6 class="font-weight-bolder text-dark">Kamu masih bisa menambahkan pesananmu selagi masih disiapkan</h6>
+                                        <a href="{{ route('tambahPemesanan',$pemesanan->id) }}">
+                                            <button type="button" id="btn-register" class="btn btn-warning font-weight-bolder btn-md btn-pill " style="color: white;border-color:#EE9D01;background-color:#EE9D01;box-shadow: 5px 5px #00000059;">
+                                                <i class="fas fa-shopping-basket"></i>
+                                                Tambah Belanja
+                                            </button>
+                                        </a>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card card-primary card-outline">
                             <table class="table table-sm table-striped table-hover " id="servisan-table">
                                 <thead>
                                     <tr class="text-center">
                                         <th>No</th>
-                                        <th>Kategori</th>
                                         <th>Nama Barang</th>
                                         <th>Harga Per Satuan </th>
                                         <th>Qty Permintaan</th>
-                                        <th>Satuan</th>
                                         @if (in_array($pemesanan->status, [7,8,9]))
                                             <th>Qty Diterima</th>
                                             <th>Total Harga</th>
@@ -117,15 +139,17 @@
                                     @php
                                         $i = 1;
                                     @endphp
-                                    @foreach ($pemesanan->PemesananDetail->groupBy('status_barang_user') as $items)
+                                    @foreach ($pemesanan->PemesananDetail->groupBy('status_barang') as $items)
                                         @foreach ($items as $item)
-                                            <tr class="text-center"   @if($item->status_barang_user == 2) style="background:rgb(248, 200, 200)" @endif>
+                                            <tr class="text-center"   @if($item->status_barang == 2) style="background:rgb(248, 200, 200)" @endif>
                                                 <td>{{ $i++ }}</td>
-                                                <td>{{ $item->Barang->Kategori->kategori }}</td>
-                                                <td>{{ $item->Barang->nama_barang }}</td>
+                                                <td class="text-left"><span class="badge badge-info">{{ $item->Barang->Kategori->kategori }}</span> {{ $item->Barang->nama_barang }} 
+                                                    @if ($item->status_request == 2)
+                                                        <span class="badge bg-success"><i class="fas fa-check-double"></i></span>
+                                                    @endif
+                                                </td>
                                                 <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format($item->harga_per_satuan, 0, ",", ".") }}</td>
-                                                <td>{{ $item->qty }}</td>
-                                                <td>{{ $item->Satuan->satuan }}</td>
+                                                <td>{{ $item->qty }} {{ $item->Satuan->satuan }}</td>
                                                 @if (in_array($pemesanan->status, [7,8,9]))
                                                     <td>{{ $item->qty_diterima }}</td>
                                                     <td>{{ ($item->harga_jual==null)?"-":"Rp. " .  number_format($item->harga_per_satuan*$item->qty_diterima, 0, ",", ".") }}</td>
@@ -143,10 +167,61 @@
                                 </div>
                             @endif
                         </div>
-                        @if (in_array($pemesanan->status, [1,2,3]))
+                        @if (COUNT($pemesanan->PemesananTambahan )>0)
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
-                                    <h3 class="card-title"><strong>Request Pemensanan </strong>
+                                    <h3 class="card-title"><strong>Pesanan Tambahan </strong>
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-sm table-striped table-hover " id="servisan-table" wire:ignore.self="">
+                                        <thead wire:ignore="">
+                                            <tr class="text-center">
+                                                <th>No</th>
+                                                <th>Nama Barang</th>
+                                                <th>Harga Per Satuan </th>
+                                                <th>Qty</th>
+                                                <th>Satuan</th>
+                                                <th>Total Harga</th>
+                                                <th>Keterangan</th>
+                                                <th>#</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                            @foreach ($pemesanan->PemesananTambahan as $item)
+                                            <tr class="text-center">
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td class="text-left"><span class="badge badge-info">{{ $item->Barang->Kategori->kategori }}</span> {{ $item->Barang->nama_barang }} 
+                                                    @if ($item->status_request == 2)
+                                                        <span class="badge bg-success"><i class="fas fa-check-double"></i></span>
+                                                    @endif
+                                                </td>
+                                                <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format($item->harga_per_satuan, 0, ",", ".") }}</td>
+                                                <td>{{ $item->qty }}</td>
+                                                <td>{{ $item->Satuan->satuan }}</td>
+                                                <td>{{ ($item->harga_jual==null)?"-":"Rp. " .  number_format($item->harga_per_satuan*$item->qty, 0, ",", ".") }}
+                                                </td>
+                                                <td>{{ ($item->keterangan==null)?'-':$item->keterangan }}</td>
+                                                <td>
+                                                    {!! $item->statusTambahan($item->status_ditambahkan) !!}
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    @if (COUNT($pemesanan->PemesananTambahan)==0)
+                                        <div class="alert alert-info" role="alert">
+                                            <p style="margin-bottom: 0px;">Tidak ada barang yang dipesan</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+
+                        @if (COUNT($pemesanan->PemesananRequest )>0)
+                            <div class="card card-primary card-outline">
+                                <div class="card-header">
+                                    <h3 class="card-title"><strong>Request Pemesanan </strong>
                                     </h3>
                                 </div>
                                 <div class="card-body">

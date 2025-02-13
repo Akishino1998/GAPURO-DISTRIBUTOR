@@ -30,7 +30,7 @@ class Penerimaan extends Component
     }
     function penerimaanBarang(){
         $pemesanan = Pemesanan::find($this->pemesanan->id);
-        $pemesanan->status = 7;
+        $pemesanan->status = 8;
         $pemesanan->save();
         $pemesanan->setTimelinePemesanan($pemesanan->id);
         session()->flash('message-success', "Data berhasil diubah!");

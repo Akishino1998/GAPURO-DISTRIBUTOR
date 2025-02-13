@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Livewire\Pemesanan;
-
 use App\Models\Bank;
 use App\Models\Barang;
 use App\Models\BarangHargaFix;
@@ -13,12 +12,13 @@ use App\Models\PemesananDetail;
 use App\Models\PemesananDetailTemp;
 use App\Models\PemesananRequest;
 use App\Models\PemesananRequestTemp;
+use App\Models\PemesananTambahan;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use PDO;
 
-class Create extends Component
+class Tambah extends Component
 {
     public $statusBarang;
     public $idBarang, $qty_pemesanan;
@@ -28,10 +28,10 @@ class Create extends Component
     public $statusHarga = false;
     public $nama_barang, $kategori_barang;
     public $countKeranjang;
-    public function mount(){
-        $tempBarang = PemesananDetailTemp::where('id_user',auth()->user()->id)->get();
-        $tempBarangRequest = PemesananRequestTemp::where('id_user',auth()->user()->id)->get();
+    public $pemesanan;
+    public function mount($pemesanan){
         $this->countKeranjangBelanja();
+        $this->pemesanan = $pemesanan;
     }
     function countKeranjangBelanja(){
         $tempBarang = PemesananDetailTemp::where('id_user',auth()->user()->id)->get();
@@ -131,10 +131,7 @@ class Create extends Component
             $this->addTambahBarang();
             session()->flash('message-success', "Data berhasil ditambahkan!");
         }
-       
     }
-
-
     public $tempBarang = [], $tempBarangRequest = [];
     function kerangjangBelanja(){
         $this->tempBarang = PemesananDetailTemp::where('id_user',auth()->user()->id)->get();
@@ -150,20 +147,9 @@ class Create extends Component
                 return 0;
             }
     
-            $pemesanan = new Pemesanan;
-            $pemesanan->nomor_pesanan =  $pemesanan->UNIQUE_KODE();
-            if ( $this->statusHarga == 1 && COUNT($tempRequest) ==0) {
-                $pemesanan->status_harga =  1; //sudah ada harga
-                $pemesanan->status =  1;
-            }else{
-                $pemesanan->status_harga =  2; //belum ada harga
-                $pemesanan->status = 2;
-            }
-            $pemesanan->id_user =  auth()->user()->id;
-            $pemesanan->tgl_pemesanan = NOW();
-            $pemesanan->save();
+            $pemesanan = Pemesanan::find($this->pemesanan->id);
             foreach ($tempBarang as $item) {
-                $barangTemp = new PemesananDetail;
+                $barangTemp = new PemesananTambahan;
                 $barangTemp->id_pemesanan = $pemesanan->id;
                 $barangTemp->id_barang = $item->id_barang;
                 $barangTemp->id_satuan = ($item->id_harga_fix==null)?$item->Satuan->id:$item->barangHargaFix->Satuan->id;
@@ -173,12 +159,6 @@ class Create extends Component
                 $barangTemp->harga_jual = $item->harga_jual;
                 $barangTemp->harga_per_satuan = $item->harga_jual;
                 $barangTemp->id_harga_fix = $item->id_harga_fix;
-                if ($item->id_harga_fix != null) {
-                    $barangTemp->status_diajukan = 2;
-                    $barangTemp->status_barang = 3;
-                    $barangTemp->status_ditambahkan = 2;
-                    $barangTemp->tgl_harga_acc = NOW();
-                }
                 $barangTemp->save();
                 $item->delete();
             }
@@ -190,19 +170,7 @@ class Create extends Component
                 $barangTemp->save();
                 $item->delete();
             }
-            $pemesanan->setTimelinePemesanan($pemesanan->id);
-
-            if ( $pemesanan->status == 1) {
-                $bank = Bank::get()->first();
-                $invoice = new Invoice;
-                $invoice->no_invoice = $invoice->UNIQUE_KODE();
-                $invoice->id_user = auth()->user()->id;
-                $invoice->id_bank = $bank->id;
-                $invoice->id_pemesanan = $pemesanan->id;
-                $invoice->status = 1;
-                $invoice->tgl_terbit = NOW();
-                $invoice->save();
-            }
+            // $pemesanan->setTimelinePemesanan($pemesanan->id);
             session()->flash('message-success', "Data berhasil ditambahkan!");
             DB::commit();
             return redirect(route('pemesanan.show',$pemesanan->id));
@@ -285,6 +253,6 @@ class Create extends Component
 
         $kategori = BarangKategori::get();
         $this->showPOS = auth()->user()->show_barang;
-        return view('livewire.pemesanan.create', compact('barang','kategori','barangHargaFix'));
+        return view('livewire.pemesanan.tambah', compact('barang','kategori','barangHargaFix'));
     }
 }

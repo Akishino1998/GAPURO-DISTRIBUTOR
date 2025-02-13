@@ -33,22 +33,29 @@ class Proses extends Component
     }
     function setujuiBarang(){
         $pemesanan = Pemesanan::find($this->pemesanan->id);
-        $pemesanan->status = 1;
-        $pemesanan->save();
+        if($pemesanan->Invoice == null){
+            $pemesanan->status = 1;
+            $pemesanan->save();
+            $pemesanan->setTimelinePemesanan($pemesanan->id);
+            $bank = Bank::get()->first();
+            $invoice = new Invoice;
+            $invoice->no_invoice = $invoice->UNIQUE_KODE();
+            $invoice->id_user = auth()->user()->id;
+            $invoice->id_bank = $bank->id;
+            $invoice->id_pemesanan = $pemesanan->id;
+            $invoice->status = 1;
+            $invoice->tgl_terbit = NOW();
+            $invoice->save();
+            session()->flash('message-success', "Data berhasil diubah!");
+        }
 
-        $pemesanan->setTimelinePemesanan($pemesanan->id);
-
-        $bank = Bank::get()->first();
-
-        $invoice = new Invoice;
-        $invoice->no_invoice = $invoice->UNIQUE_KODE();
-        $invoice->id_user = auth()->user()->id;
-        $invoice->id_bank = $bank;
-        $invoice->id_pemesanan = $pemesanan->id;
-        $invoice->status = 1;
-        $invoice->tgl_terbit = NOW();
-        $invoice->save();
+        foreach ($pemesanan->PemesananDetail->where('tgl_harga_acc',"!=",null) as $item) {
+            $item->status_ditambahkan = 2;
+            $item->tgl_harga_acc = NOW();
+            $item->save();
+        }
         session()->flash('message-success', "Data berhasil diubah!");
+        
     }
     function pesananDiterima(){
         $pemesanan = Pemesanan::find($this->pemesanan->id);

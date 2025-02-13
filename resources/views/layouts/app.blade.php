@@ -88,32 +88,9 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    {{-- <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                        <i class="fas fa-search"></i>
-                    </a> --}}
-                   
-                    {{-- <li class="nav-item">
-                        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-                            <i class="fas fa-expand-arrows-alt"></i>
-                        </a>
-                    </li>
-                    <div class="navbar-search-block">
-                        <form class="form-inline" method="get" action="">
-                            <div class="input-group input-group-sm">
-                                <input class="form-control form-control-navbar" type="search" placeholder="Cari Kode Servisan" name="servisan" aria-label="Search">
-                                <div class="input-group-append">
-                                    <button class="btn btn-navbar" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                    <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                                        <i class="fas fa-times"></i>
-                                      </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </li> --}}
+                @if (in_array(auth()->user()->id_role, [1,2]))
+                    <livewire:notif-pesanan-baru>
+                @endif
                 <li class="nav-item dropdown user-menu">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                         <img src="{{ asset('img/user.png') }}" class="user-image img-circle elevation-2" alt="User Image">
@@ -160,7 +137,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment-with-locales.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
-
+@if (in_array(auth()->user()->id_role, [1,2]))
+    <livewire:modal-pesanan-baru>
+@endif
 </html>
 @yield('third_party_scripts')
 @stack('page_scripts')

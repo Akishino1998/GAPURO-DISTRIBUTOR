@@ -14,7 +14,7 @@
     <div class="content px-3 pt-3">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"><a href="{{ route('toko.index') }}" class="btn btn-primary btn-sm"><strong><i class="fas fa-backward    "></i> Kembali</strong></a> <strong>Pemesanan</strong></h3>
+                <h3 class="card-title"><a href="{{ route('pemesanan.show',$pemesanan->id) }}" class="btn btn-primary btn-sm"><strong><i class="fas fa-backward    "></i> Kembali</strong></a> <strong>Tambah Pemesanan</strong></h3>
                 <div class="card-option float-right">
                     <button data-toggle="modal" data-target="#modalKeranjang" wire:click="kerangjangBelanja()" class="btn btn-info text-white" type="submit" style="width: 100%" > <strong><i class="fa fa-shopping-cart" aria-hidden="true"></i> Keranjang Belanja <span class="badge badge-success">{{ $countKeranjang }}</span></strong></button>
                 </div>

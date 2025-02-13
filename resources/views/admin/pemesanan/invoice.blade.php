@@ -10,10 +10,14 @@
                             <a href="{{ route('admin.pemesanan.show',$pemesanan->id) }}" class="btn btn-primary btn-sm"><strong><i class="fas fa-backward    "></i> Kembali</strong></a>  <strong>Invoice</strong>
                         </h3>
                         <div class="card-options float-right">
-                            @if ($pemesanan->Invoice->status == 2)
+                            @if ( $pemesanan->Invoice->status == 1)
+                                <button  data-toggle="modal" data-target="#modalBarangSiap" type="button" class="btn btn-success float-right"><i class="fas fa-file-invoice"></i>
+                                    Terbitkan Invoice
+                                </button>
+                            @elseif ($pemesanan->Invoice->status == 2)
                                 <button data-toggle="modal" data-target="#modalProsesPemesanan" class="btn btn-info btn-sm"><i class="fas fa-file-invoice"></i> Konfirmasi Pembayaran </button>
-                            @else
-                            <button class="btn btn-success btn-sm"><i class="fas fa-file-invoice"></i> Lunas </button>
+                            @elseif ($pemesanan->Invoice->status == 3)
+                                <button class="btn btn-success btn-sm"><i class="fas fa-file-invoice"></i> Lunas </button>
                             @endif
                         </div>    
                     </div>
@@ -78,7 +82,7 @@
 									@php
 										$total = 0;
 									@endphp
-									@foreach ($pemesanan->PemesananDetail->where('status_tersedia',1) as $item)
+									@foreach ($pemesanan->PemesananDetail->where('status_barang_user',1) as $item)
 										<tr class="text-center">
 											<td>{{ $loop->iteration }}</td>
 											<td>{{ $item->Barang->nama_barang }}</td>
@@ -117,13 +121,7 @@
                     </div>
                     <div class="row no-print">
                         <div class="col-12">
-                            {{-- <a href="{{ route('admin.pemesanan.invoicePrint',$pemesanan->id) }}" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a> --}}
-                            @if ( $pemesanan->Invoice->status == 1)
-                                <button  data-toggle="modal" data-target="#modalBarangSiap" type="button" class="btn btn-success float-right"><i class="fas fa-file-invoice"></i>
-                                    Terbitkan Invoice
-                                </button>
-                            @endif
-                            <a href="{{ route('admin.pemesanan.invoicePrint',$pemesanan->id) }}" type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
+                            <a href="{{ route('admin.pemesanan.invoicePrint',$pemesanan->id) }}" target="_blank" type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
                                 <i class="fas fa-print"></i> Print
                             </a>
                         </div>

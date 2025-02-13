@@ -37,13 +37,17 @@
                         @endif
                         @if ($pemesanan->status == 2)
                             <button data-toggle="modal" data-target="#modalBatalkanPemesanan" class="btn btn-danger btn-sm"><i class="fas fa-times-circle"></i> Batalkan Pemesanan</button>
-                            @if ($pemesanan->cekStatusRequest($pemesanan->id))
-                                <a href="{{ route('admin.pemesanan.request',$pemesanan->id) }}" class="btn btn-warning btn-sm"> <i class="fas fa-file-signature"></i> Verifikasi Request</a>
-                            @endif
                             @if (COUNT($pemesanan->PemesananDetail)!=0)
                                 <a href="{{ route('admin.pemesanan.setHarga',$pemesanan->id) }}" class="btn btn-info btn-sm"> <i class="fas fa-file-signature"></i> Ubah Harga</a>
                             @endif
                         @endif
+                        @if ($pemesanan->cekStatusRequest($pemesanan->id))
+                            <a href="{{ route('admin.pemesanan.request',$pemesanan->id) }}" class="btn btn-warning btn-sm"> <i class="fas fa-file-signature"></i> Verifikasi Request</a>
+                        @endif
+                        @if ($pemesanan->cekStatusTambahan($pemesanan->id))
+                            <a href="{{ route('admin.pemesanan.setHarga',$pemesanan->id) }}" class="btn btn-warning btn-sm"> <i class="fas fa-file-signature"></i> Verifikasi Tambahan</a>
+                        @endif
+                        
                         @if ($pemesanan->cekStatusHarga($pemesanan->id)==0 and $pemesanan->status == 2)
                             <button data-toggle="modal" data-target="#modalKirimPenawaran" class="btn btn-success btn-sm"><i class="fas fa-file-contract"></i> Kirim Penawaran Ke Konsumen</button>
                         @endif
@@ -51,11 +55,14 @@
                             <button class="btn btn-info btn-sm"><i class="fas fa-file-signature"></i> Proses Penawaran Harga</button>
                         @endif
                         @if ($pemesanan->status == 4)
-                            @if ($pemesanan->cekStatusPembelian($pemesanan->id) == COUNT($pemesanan->PemesananDetail->where('status_barang_user',1)))
-                                <button data-toggle="modal" data-target="#modalBarangDikirim" class="btn btn-info btn-sm"><strong><i class="fas fa-truck"></i> Semua Barang Telah Dibeli, lanjutkan pengiriman?</strong></button>
-                            @else
-                                <a href="{{ route('admin.pemesanan.menyiapkan',$pemesanan->id) }}" class="btn btn-success btn-sm"><strong><i class="fas fa-truck-loading"></i> Siapkan Pesanan</strong></a>
+                            @if ($pemesanan->cekStatusRequest($pemesanan->id)==null)
+                                @if ($pemesanan->cekStatusPembelian($pemesanan->id) == COUNT($pemesanan->PemesananDetail->where('status_barang_user',1)))
+                                    <button data-toggle="modal" data-target="#modalBarangDikirim" class="btn btn-info btn-sm"><strong><i class="fas fa-truck"></i> Semua Barang Telah Dibeli, lanjutkan pengiriman?</strong></button>
+                                @else
+                                    <a href="{{ route('admin.pemesanan.menyiapkan',$pemesanan->id) }}" class="btn btn-success btn-sm"><strong><i class="fas fa-truck-loading"></i> Siapkan Pesanan</strong></a>
+                                @endif
                             @endif
+                            
                         @endif
                         @if ($pemesanan->status == 6)
                             <button class="btn btn-success btn-sm"><i class="fas fa-truck"></i> Pengiriman</button>
@@ -74,7 +81,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-xl-8 col-md-12">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
                                 <h3 class="card-title"><strong>Informasi Pemesanan </strong>
@@ -148,16 +155,14 @@
                             </div>
                         @endif
                      
-                        <div class="card card-primary card-outline">
+                        <div class="card card-primary card-outline table-responsive">
                             <table class="table table-sm table-striped table-hover " id="servisan-table">
                                 <thead>
                                     <tr class="text-center">
                                         <th>No</th>
-                                        <th>Kategori</th>
                                         <th>Nama Barang</th>
-                                        <th>Harga Per Satuan </th>
+                                        <th>Harga Satuan </th>
                                         <th>Qty</th>
-                                        <th>Satuan</th>
                                         <th>Total Harga</th>
                                         <th>Keterangan</th>
                                         @if ($pemesanan->status == 4)
@@ -172,16 +177,14 @@
                                     @foreach ($pemesanan->PemesananDetail->where('status_barang_user',1) as $item)
                                         <tr class="text-center"   @if($item->status_tersedia == 2) style="background:rgb(207 248 200)" @endif>
                                             <td>{{ $i++ }}</td>
-                                            <td>{{ $item->Barang->Kategori->kategori }}</td>
-                                            <td>{{ $item->Barang->nama_barang }} 
+                                            <td><span class="badge badge-info">{{ $item->Barang->Kategori->kategori }}</span> {{ $item->Barang->nama_barang }} 
                                                 @if ($item->status_request == 2)
                                                     <span class="badge bg-success"><i class="fas fa-check-double"></i></span>
                                                 @endif
                                             </td>
                                             <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format($item->harga_per_satuan, 0, ",", ".") }}
                                             </td>
-                                            <td>{{ $item->qty }}</td>
-                                            <td>{{ $item->Satuan->satuan }}</td>
+                                            <td>{{ $item->qty }} {{ $item->Satuan->satuan }}</td>
                                             <td>{{ ($item->harga_jual==null)?"-":"Rp. " .  number_format($item->harga_per_satuan*$item->qty, 0, ",", ".") }}
                                             </td>
                                             <td>{{ ($item->keterangan==null)?'-':$item->keterangan }}</td>
@@ -191,19 +194,21 @@
                                         </tr>
                                     @endforeach
                                     @foreach ($pemesanan->PemesananDetail->where('status_barang_user',2) as $item)
-                                        <tr class="text-center"   @if($item->status_barang_user == 2) style="background:rgb(248, 200, 200)" @endif>
+                                        <tr class="text-center"  @if($item->status_barang_user == 2) style="background:rgb(248, 200, 200)" @endif>
                                             <td>{{ $i++ }}</td>
-                                            <td>{{ $item->Barang->Kategori->kategori }}</td>
-                                            <td>{{ $item->Barang->nama_barang }}</td>
+                                            <td><span class="badge badge-info">{{ $item->Barang->Kategori->kategori }}</span> {{ $item->Barang->nama_barang }} 
+                                                @if ($item->status_request == 2)
+                                                    <span class="badge bg-success"><i class="fas fa-check-double"></i></span>
+                                                @endif
+                                            </td>
                                             <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format($item->harga_per_satuan, 0, ",", ".") }}
                                             </td>
-                                            <td>{{ $item->qty }}</td>
-                                            <td>{{ $item->Satuan->satuan }}</td>
+                                            <td>{{ $item->qty }} {{ $item->Satuan->satuan }}</td>
                                             <td>{{ ($item->harga_jual==null)?"-":"Rp. " .  number_format($item->harga_per_satuan*$item->qty, 0, ",", ".") }}
                                             </td>
                                             <td>{{ ($item->keterangan==null)?'-':$item->keterangan }}</td>
                                             @if ($pemesanan->status == 4)
-                                                <td></td>
+                                                <td>{{ ($item->harga_modal_total==null)?"-":"Rp. " .  number_format($item->harga_modal_total, 0, ",", ".") }}
                                             @endif
                                         </tr>
                                     @endforeach
@@ -215,7 +220,51 @@
                                 </div>
                             @endif
                         </div>
-                        @if (in_array($pemesanan->status, [2,3]))
+                        @if (COUNT($pemesanan->PemesananTambahan)>0)
+                            <div class="card card-primary card-outline">
+                                <div class="card-header">
+                                    <h3 class="card-title"><strong>Pemesanan Tambahan </strong>
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-sm table-striped table-hover " id="servisan-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:80px" class="text-center">No</th>
+                                                <th>Nama Barang</th>
+                                                <th class="text-center">Harga Satuan</th>
+                                                <th class="text-center">Qty</th>
+                                                <th class="text-center">Total Harga</th>
+                                                <th class="text-center">Keterangan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $i = 1;
+                                            @endphp
+                                            @foreach ($pemesanan->PemesananTambahan as $item)
+                                                <tr class="text-center" >
+                                                    <td class="text-center">{{ $i++ }}</td>
+                                                    <td class="text-left">{{ $item->nama_barang }}</td>
+                                                    <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format($item->harga_per_satuan, 0, ",", ".") }}
+                                                    </td>
+                                                    <td>{{ $item->qty }} {{ $item->Satuan->satuan }}</td>
+                                                    <td>{{ ($item->harga_jual==null)?"-":"Rp. " .  number_format($item->harga_per_satuan*$item->qty, 0, ",", ".") }}
+                                                    </td>
+                                                    <td class="text-center">{!! $item->statusTambahan($item->status_ditambahkan) !!}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    @if (COUNT($pemesanan->PemesananTambahan)==0)
+                                        <div class="alert alert-info" role="alert">
+                                            <p style="margin-bottom: 0px;">Tidak ada barang yang direquest</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+                        @if (COUNT($pemesanan->PemesananRequest)>0)
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
                                     <h3 class="card-title"><strong>Request Pemesanan </strong>
@@ -254,7 +303,7 @@
                             </div>
                         @endif
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-xl-4 col-md-12">
                         <div class="card card-primary card-outline">
                             <div class="card-body">
                                 <img src="{{ $pemesanan->imgStatus($pemesanan->status) }}" alt="" width="50%" style="

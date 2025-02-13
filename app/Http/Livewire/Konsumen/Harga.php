@@ -65,11 +65,18 @@ class Harga extends Component
         BarangHargaFix::find($id)->delete();
         session()->flash('message-success', "Data berhasil dihapus!");
     }
+    public $search;
     public function render()
     {
         $barang = Barang::get();
         $satuan = BarangSatuan::get();
-        $barangFix = BarangHargaFix::where('id_konsumen',$this->konsumen->id)->get();
+        $barangFix = BarangHargaFix::where('id_konsumen',$this->konsumen->id);
+        if ($this->search != null) {
+            $barangFix = $barangFix->whereHas('Barang', function($query) {
+                $query->where('alt_barang','LIKE', "%".$this->search."%");
+            });
+        }
+        $barangFix = $barangFix->get();
         return view('livewire.konsumen.harga',compact('barangFix','barang','satuan'));
     }
 }

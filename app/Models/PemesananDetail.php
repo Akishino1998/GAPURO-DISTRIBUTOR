@@ -20,4 +20,8 @@ class PemesananDetail extends Model
     {
         return $this->belongsTo(\App\Models\BarangSatuan::class, 'id_satuan')->withTrashed();
     }
+    public function Penyiapan()
+    {
+        return $this->hasMany(PemesananDetailPenyiapan::class, 'id_pemesanan_detail', 'id');
+    }
 }

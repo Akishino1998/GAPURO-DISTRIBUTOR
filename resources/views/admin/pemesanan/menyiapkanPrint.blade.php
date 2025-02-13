@@ -18,7 +18,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <h4>
-                                    TOKO SAYUR <b>KASMI</b>
+                                    TOKO SAYUR <b>KASMI</b> <strong>#{{ $pemesanan->nomor_pesanan }}</strong>
                                     <small class="float-right">{{  \Carbon\Carbon::parse($pemesanan->Invoice->tgl_terbit)->translatedFormat('l, d F Y')  }}</small>
                                 </h4>
                             </div>
@@ -40,7 +40,7 @@
                                         @php
                                             $total = 0;
                                         @endphp
-                                        @foreach ($pemesanan->PemesananDetail->where('status_tersedia',1) as $item)
+                                        @foreach ($pemesanan->PemesananDetail->where('status_barang_user',1) as $item)
                                             <tr class="text-center">
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $item->Barang->nama_barang }}</td>

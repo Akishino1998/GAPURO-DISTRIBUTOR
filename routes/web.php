@@ -50,6 +50,7 @@ Route::get('/', function () {
             Route::get('/cek-harga/{id}', [App\Http\Controllers\PemesananController::class, 'cekHarga'])->name('cekHarga');
         });
         Route::get('/pemesanan/{id}/invoice', [App\Http\Controllers\PemesananController::class, 'invoicePemesanan'])->name('invoicePemesanan');
+        Route::get('/pemesanan/{id}/tambah', [App\Http\Controllers\PemesananController::class, 'tambahPemesanan'])->name('tambahPemesanan');
         Route::resource('pemesanan', App\Http\Controllers\PemesananController::class);
     });
 // });

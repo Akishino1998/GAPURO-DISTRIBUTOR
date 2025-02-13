@@ -17,6 +17,8 @@ class PemesananController extends Controller
         if ($pemesanan == null) {
             return redirect(route('admin.pemesanan.index'));
         }
+        $pemesanan->stat_new = 2;
+        $pemesanan->save();
         return view('admin.pemesanan.proses',compact('pemesanan'));
     }
     function setHarga($id){
@@ -78,6 +80,8 @@ class PemesananController extends Controller
         if ($pemesanan->Invoice == null) {
             return redirect(route('admin.pemesanan.index'));
         }
+        $pemesanan->status = 9;
+        $pemesanan->save();
         $invoice = $pemesanan->Invoice;
         $invoice->status = 3;
         $invoice->tgl_bayar = NOW();

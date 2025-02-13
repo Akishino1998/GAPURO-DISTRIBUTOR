@@ -135,7 +135,7 @@ class Pemesanan extends Model
         $pemesanan = Pemesanan::find($id);
         $cekHarga = 0;
         foreach ($pemesanan->PemesananDetail as $item) {
-            if ($item->harga_jual == null or $item->harga_jual == 0 or $item->status_barang == 2) {
+            if ($item->status_barang == 1) {
                 $cekHarga++;
             }
         }
@@ -145,6 +145,26 @@ class Pemesanan extends Model
             }
         }
         return $cekHarga;
+    }
+    function cekStatusHargaTambahan($id){
+        $pemesanan = Pemesanan::find($id);
+        $cekHarga = 0;
+        foreach ($pemesanan->PemesananTambahan as $item) {
+            if ($item->harga_jual == null or $item->harga_jual == 0) {
+                $cekHarga++;
+            }
+        }
+        return $cekHarga;
+    }
+    function cekStatusTambahan($id){
+        $pemesanan = Pemesanan::find($id);
+        $cekRequest = 0;
+        foreach ($pemesanan->PemesananTambahan as $item) {
+            if ($item->status_pemesanan == 1 ) {
+                $cekRequest++;
+            }
+        }
+        return $cekRequest;
     }
     function cekStatusRequest($id){
         $pemesanan = Pemesanan::find($id);
@@ -203,7 +223,7 @@ class Pemesanan extends Model
         $servisan = Pemesanan::where('id_user',auth()->user()->id)->whereBetween('created_at', array($first_day_this_month, $last_day_this_month))->get();
         $totalUser = str_pad(COUNT($servisan)+1, 3, '0', STR_PAD_LEFT);
         $today = date("dmy");
-        return "0".auth()->user()->id."/".$totalUser."/".$today;
+        return "PO/0".auth()->user()->id."/".$totalUser."/".$today;
     } 
     public function PemesananTimeLine()
     {
@@ -216,6 +236,10 @@ class Pemesanan extends Model
     public function PemesananRequest()
     {
         return $this->hasMany(PemesananRequest::class, 'id_pemesanan', 'id');
+    }
+    public function PemesananTambahan()
+    {
+        return $this->hasMany(PemesananTambahan::class, 'id_pemesanan', 'id');
     }
     public function User()
     {

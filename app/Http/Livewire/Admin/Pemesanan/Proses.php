@@ -26,7 +26,10 @@ class Proses extends Component
         $pemesanan = Pemesanan::find($this->pemesanan->id);
         $pemesanan->status = 3;
         $pemesanan->save();
-
+        foreach($pemesanan->PemesananDetail as $item){
+            $item->status_diajukan = 2;
+            $item->save();
+        }
         $pemesanan->setTimelinePemesanan($pemesanan->id);
 
         session()->flash('message-success', "Data berhasil diubah!");

@@ -60,7 +60,7 @@
 											@php
 												$total = 0;
 											@endphp
-											@foreach ($pemesanan->PemesananDetail->where('status_tersedia',1) as $item)
+											@foreach ($pemesanan->PemesananDetail->where('status_barang_user',1) as $item)
 												<tr class="text-center">
 													<td>{{ $loop->iteration }}</td>
 													<td>{{ $item->Barang->nama_barang }}</td>

@@ -19,7 +19,10 @@ class Proses extends Component
         $pemesanan->keterangan_batal = $this->keterangan_batal;
         $pemesanan->save();
         $pemesanan->setTimelinePemesanan($pemesanan->id);
-
+        if (!empty($pemesanan->Invoice)) {
+            $invoice = $pemesanan->Invoice;
+            $invoice->delete();
+        }
         session()->flash('message-success', "Data berhasil diubah!");
     }
     function kirimPenawaran(){

@@ -100,6 +100,14 @@
                 </a>
             </li>
         </ul>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="{{ route('admin.laporan.labaRugi') }}" class="nav-link {{ (request()->routeIs('admin.laporan.labaRugi*')) ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-user"></i>
+                    <p>Laba Rugi</p> 
+                </a>
+            </li>
+        </ul>
     </li>
 @endif
 @if (Auth::user()->Role->RolePermission->where('id_permission',($providerPermission->where("route_name",'LIKE',"admin.master")->COUNT()>0)?$providerPermission->where("route_name",'LIKE',"admin.master")->first()->id:"")->COUNT()>0 )

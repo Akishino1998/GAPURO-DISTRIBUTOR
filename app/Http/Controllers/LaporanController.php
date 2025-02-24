@@ -15,4 +15,7 @@ class LaporanController extends Controller
     function pendapatan(){
         return view('admin.laporan.pendapatan');
     }
+    function labaRugi(){
+        return view('admin.laporan.laba-rugi');
+    }
 }

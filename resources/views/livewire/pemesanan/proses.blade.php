@@ -41,12 +41,14 @@
                             <a href="{{ route('pemesanan.cekHarga',$pemesanan->id) }}" class="btn btn-warning btn-sm"><strong><i class="fas fa-tasks"></i> Cek Barang</strong></a>
                             @if ($pemesanan->cekStatusHargaUser($pemesanan->id)==0 AND $pemesanan->PemesananTambahan->where('status_ditambahkan','!=',1)->where('status_pemesanan',1)->COUNT()>0)
                                 <button  data-toggle="modal" data-target="#modalSetujuiBarang"  class="btn btn-success btn-sm"><strong><i class="fas fa-clipboard-check"></i> Setujui Semua Harga</strong></button>
-                            @elseif($pemesanan->cekStatusHargaUser($pemesanan->id) < COUNT($pemesanan->PemesananDetail))
+                            @elseif($pemesanan->cekStatusHargaUser($pemesanan->id) <= COUNT($pemesanan->PemesananDetail))
                                 <button data-toggle="modal" data-target="#modalSetujuiBarang"  class="btn btn-success btn-sm"><strong><i class="fas fa-clipboard-check"></i> Setujui Barang Terpilih</strong></button>
                             @endif
                         @endif
                     @endif
-                    
+                    @if ($pemesanan->PemesananDetail->where('status_ditambahkan',2)->where('tgl_harga_acc',null)->COUNT()==$pemesanan->PemesananDetail->COUNT() AND $pemesanan->status!=0)
+                        <button data-toggle="modal" data-target="#modalBatalkanPemesanan" class="btn btn-danger btn-sm"><i class="fas fa-times-circle"></i> Batalkan Pemesanan</button>
+                    @endif
                    
                 </div>
             </div>
@@ -147,7 +149,13 @@
                                                 <td>{{ $i++ }}</td>
                                                 <td class="text-left"><span class="badge badge-info">{{ $item->Barang->Kategori->kategori }}</span> {{ $item->Barang->nama_barang }} 
                                                     @if ($item->status_request == 2)
-                                                        <span class="badge bg-success"><i class="fas fa-check-double"></i></span>
+                                                        @if ($item->status_ditambahkan == 2 and $item->tgl_harga_acc != null)
+                                                            <span class="badge bg-info"><i class="fas fa-spinner fa-spin"></i></span>
+                                                        @elseif ($item->status_ditambahkan == 1)
+                                                            <span class="badge bg-success"><i class="fas fa-check-double"></i></span>
+                                                        @else
+                                                            <span class="badge bg-danger"><i class="fas fa-times"></i></span>
+                                                        @endif
                                                     @endif
                                                 </td>
                                                 <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format($item->harga_per_satuan, 0, ",", ".") }}</td>

@@ -39,6 +39,7 @@ Route::get('/', function () {
             Route::group(['prefix'=>'laporan','as'=>'laporan.' ],function () {
                 Route::get('/invoice', [App\Http\Controllers\LaporanController::class, 'invoice'])->name('invoice');
                 Route::get('/pendapatan', [App\Http\Controllers\LaporanController::class, 'pendapatan'])->name('pendapatan');
+                Route::get('/laba-rugi', [App\Http\Controllers\LaporanController::class, 'labaRugi'])->name('labaRugi');
             });
 
             Route::resource('pemesanan', App\Http\Controllers\Admin\PemesananController::class);

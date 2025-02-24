@@ -22,7 +22,6 @@
                     <th>Nama Toko</th>
                     <th>Nama Pemilik</th>
                     <th>Email</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,16 +33,6 @@
                         <td>{{ $item->nama_toko }}</td>
                         <td>{{ $item->PemilikToko->name }}</td>
                         <td class="text-center">{{ $item->PemilikToko->email }}</td>
-                        <td width="120">
-                            <div class='btn-group'>
-                                <a href="{{ route('toko.show', [$item->id]) }}" class='btn btn-info btn-sm'>
-                                    <i class="far fa-eye"></i> Lihat
-                                </a>
-                                <a href="{{ route('toko.show', [$item->id]) }}" class='btn btn-info btn-sm'>
-                                    <i class="far fa-eye"></i> Lihat
-                                </a>
-                            </div>
-                        </td>
                     </tr>
                 @endforeach
             </tbody>

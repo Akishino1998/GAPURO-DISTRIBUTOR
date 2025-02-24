@@ -10,8 +10,9 @@
                             <a href="{{ route('pemesanan.show',$pemesanan->id) }}" class="btn btn-primary btn-sm"><strong><i class="fas fa-backward    "></i> Kembali</strong></a>  <strong>Invoice</strong>
                         </h3>
                         <div class="card-options float-right">
-                            @if ($pemesanan->Invoice->status == 2)
-                            @else
+                            @if ($pemesanan->Invoice->status == 1)
+                            <span class="badge bg-secondary"><i class="fas fa-spinner fa-spin"></i> Belum Diproses</span>
+                            @elseif ($pemesanan->Invoice->status == 3)
                             <button class="btn btn-success btn-sm"><i class="fas fa-file-invoice"></i> Lunas </button>
                             @endif
                         </div>    
@@ -28,9 +29,7 @@
                         <div class="col-12">
                             <h4>
                                 TOKO SAYUR <b>KASMI</b>  
-                            @if ($pemesanan->Invoice->status == 1)
-                                <span class="badge bg-secondary"><i class="fas fa-spinner fa-spin"></i> Belum Diproses</span>
-                            @elseif ($pemesanan->Invoice->status == 2)
+                            @if ($pemesanan->Invoice->status == 2)
                                 <span class="badge bg-primary"><i class="fas fa-file-invoice"></i> Terbit</span>
                             @elseif ($pemesanan->Invoice->status == 3)
                                 <span class="badge bg-success"><i class="fas fa-file-invoice"></i> Lunas</span>

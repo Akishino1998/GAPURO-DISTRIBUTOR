@@ -63,6 +63,16 @@
         .navbar-area-two .exto-responsive-nav .mean-container a.meanmenu-reveal span{
             background: black;
         }
+        .card-top{
+            padding:100px 0px!important;
+            max-height:500px!important;
+            background-image:none !important;
+        }
+         .card-bottom{
+            margin-top : -50px !important;
+            min-height : 0px !important;
+            padding-top: 0px !important;
+        }
     </style>
     <title>GAPURO   </title>
 </head>
@@ -152,14 +162,11 @@
                         <div class="content">
                             <p><i class="fa fa-dot-circle"></i> Jagung</p>
                         </div>
-                        <div class="content">
-                            <p><i class="fa fa-dot-circle"></i> Brokoli</p>
-                        </div>
                     </div>
                     <div class="card-bottom">
                         <div>
                             <h3>Sayur-Sayuran</h3>
-                            <p>Sayuran segar berkualitas tinggi yang dipanen dari sumber terpercaya</p>
+                            <p>Sayuran segar berkualitas tinggi</p>
                         </div>
                     </div>
                 </div>
@@ -173,9 +180,6 @@
                         </div>
                         <div class="content">
                             <p><i class="fa fa-dot-circle"></i> Semangka</p>
-                        </div>
-                        <div class="content">
-                            <p><i class="fa fa-dot-circle"></i> Anggur</p>
                         </div>
                     </div>
                     <div class="card-bottom">
@@ -194,9 +198,6 @@
                         <div class="content">
                             <p><i class="fa fa-dot-circle"></i> Daging Sapi
                             </p>
-                        </div>
-                        <div class="content">
-                            <p><i class="fa fa-dot-circle"></i> Tahu</p>
                         </div>
                     </div>
                     <div class="card-bottom">

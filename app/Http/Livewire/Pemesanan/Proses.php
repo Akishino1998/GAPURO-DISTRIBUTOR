@@ -24,6 +24,10 @@ class Proses extends Component
             $item->save();
         }
 
+        if (!empty($pemesanan->Invoice)) {
+            $invoice = $pemesanan->Invoice;
+            $invoice->delete();
+        }
         $pemesanan->setTimelinePemesanan($pemesanan->id);
 
         session()->flash('message-success', "Data berhasil diubah!");
@@ -58,6 +62,11 @@ class Proses extends Component
         foreach ($pemesanan->PemesananDetail->where('status_barang_user',1)->where('status_ditambahkan',1) as $item) {
             $item->status_ditambahkan = 2;
             $item->tgl_harga_acc = NOW();
+            $item->save();
+        }
+
+        foreach ($pemesanan->PemesananDetail->where('status_barang_user',2)->where('status_ditambahkan',1) as $item) {
+            $item->status_ditambahkan = 2;
             $item->save();
         }
         session()->flash('message-success', "Data berhasil diubah!");

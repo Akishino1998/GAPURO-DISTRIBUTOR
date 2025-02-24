@@ -18,6 +18,12 @@ class Proses extends Component
         $pemesanan->status = 0;
         $pemesanan->save();
 
+        foreach ($pemesanan->PemesananDetail as $item) {
+            $item->status_ditambahkan = 2;
+            $item->tgl_harga_acc = null;
+            $item->save();
+        }
+
         $pemesanan->setTimelinePemesanan($pemesanan->id);
 
         session()->flash('message-success', "Data berhasil diubah!");
@@ -49,7 +55,7 @@ class Proses extends Component
             session()->flash('message-success', "Data berhasil diubah!");
         }
 
-        foreach ($pemesanan->PemesananDetail->where('tgl_harga_acc',"!=",null) as $item) {
+        foreach ($pemesanan->PemesananDetail->where('status_barang_user',1)->where('status_ditambahkan',1) as $item) {
             $item->status_ditambahkan = 2;
             $item->tgl_harga_acc = NOW();
             $item->save();

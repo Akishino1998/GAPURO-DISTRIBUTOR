@@ -6,6 +6,8 @@
                     <th style="width: 50px">No</th>
                     <th>Nama</th>
                     <th>Tgl. Pemesanan</th>
+                    <th>Tgl. Invoice</th>
+                    <th>No. Invoice</th>
                     <th>Tgl. Tiba</th>
                     <th>Status</th>
                     <th style="width: 120px">Action</th>
@@ -17,6 +19,8 @@
                         <td class="text-center">{{ $loop->iteration }}</td>
                         <td class="text-center">{{ $item->User->name }}</td>
                         <td class="text-center">{{ date("d F Y", strtotime($item->tgl_pemesanan)) }}</td>
+                        <td class="text-center">{{ (($item->Invoice==null)?"-":date("d F Y", strtotime($item->Invoice->tgl_terbit)))  }}</td>
+                        <td class="text-center">{{ (($item->Invoice==null)?"-":$item->Invoice->no_invoice)  }}</td>
                         <td class="text-center">{{ ($item->tgl_selesai!=null)?date("d F Y", strtotime($item->tgl_selesai)):"-" }}</td>
                         <td class="text-center">{!! $item->status($item->status) !!}</td>
                         <td class="bg-info">

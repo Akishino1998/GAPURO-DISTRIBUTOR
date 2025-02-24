@@ -36,6 +36,11 @@ Route::get('/', function () {
                 Route::get('/invoice/{id}/terbit', [App\Http\Controllers\Admin\PemesananController::class, 'invoiceTerbit'])->name('invoiceTerbit');
                 Route::get('/invoice/{id}/download', [App\Http\Controllers\Admin\PemesananController::class, 'invoiceDownload'])->name('invoiceDownload');
             });
+            Route::group(['prefix'=>'laporan','as'=>'laporan.' ],function () {
+                Route::get('/invoice', [App\Http\Controllers\LaporanController::class, 'invoice'])->name('invoice');
+                Route::get('/pendapatan', [App\Http\Controllers\LaporanController::class, 'pendapatan'])->name('pendapatan');
+            });
+
             Route::resource('pemesanan', App\Http\Controllers\Admin\PemesananController::class);
             Route::resource('invoice', App\Http\Controllers\Admin\InvoiceController::class);
         });

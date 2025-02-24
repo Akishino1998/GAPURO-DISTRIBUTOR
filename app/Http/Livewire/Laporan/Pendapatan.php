@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Livewire\Admin\Invoice;
+namespace App\Http\Livewire\Laporan;
 
 use App\Models\Invoice;
 use Livewire\Component;
 
-class Index extends Component
+class Pendapatan extends Component
 {
     public $time_start, $time_end;
     public $limitPerPage = 30;
@@ -30,7 +30,7 @@ class Index extends Component
     }
     public function render()
     {
-        $invoice = Invoice::latest()->whereBetween('tgl_terbit',[$this->time_start,$this->time_end])->paginate($this->limitPerPage);
-        return view('livewire.admin.invoice.index',compact('invoice'));
+        $invoice = Invoice::latest()->where('status',3)->whereBetween('tgl_terbit',[$this->time_start,$this->time_end])->paginate($this->limitPerPage);
+        return view('livewire.laporan.pendapatan' ,compact('invoice'));
     }
 }

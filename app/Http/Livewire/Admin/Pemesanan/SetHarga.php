@@ -47,7 +47,14 @@ class SetHarga extends Component
     }
     function kirimPenawaranTambahan(){
         $pemesanan = Pemesanan::find($this->pemesanan->id);
+      
         foreach($pemesanan->PemesananTambahan->where('status_pemesanan',1) as $item){
+            if ($item->status_ditambahkan == 1) {
+                $item->status_ditambahkan = 2;
+            }
+            $item->status_pemesanan = 2;
+            $item->status_diajukan = 2;
+            $item->save();
             if ($item->id_harga_fix != null AND $item->status_ditambahkan == 2) {
                 $barang = new PemesananDetail;
                 $barang->status_barang = 3;
@@ -70,10 +77,7 @@ class SetHarga extends Component
                 $barang->save();
 
             }
-
-            $item->status_pemesanan = 2;
-            $item->status_diajukan = 2;
-            $item->save();
+            
         }
         session()->flash('message-success', "Data berhasil diubah!");
     }

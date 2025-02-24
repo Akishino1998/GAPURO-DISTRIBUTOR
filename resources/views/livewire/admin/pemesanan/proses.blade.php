@@ -37,7 +37,7 @@
                         @endif
                         @if ($pemesanan->status == 2)
                             <button data-toggle="modal" data-target="#modalBatalkanPemesanan" class="btn btn-danger btn-sm"><i class="fas fa-times-circle"></i> Batalkan Pemesanan</button>
-                            @if (COUNT($pemesanan->PemesananDetail)!=0)
+                            @if (COUNT($pemesanan->PemesananDetail)!=0 AND COUNT($pemesanan->PemesananDetail->where('tgl_harga_acc'))!=COUNT($pemesanan->PemesananDetail))
                                 <a href="{{ route('admin.pemesanan.setHarga',$pemesanan->id) }}" class="btn btn-info btn-sm"> <i class="fas fa-file-signature"></i> Ubah Harga</a>
                             @endif
                         @endif

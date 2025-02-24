@@ -65,7 +65,7 @@
         </a>
     </li>
 @endif
-{{-- @if (Auth::user()->Role->RolePermission->where('id_permission',($providerPermission->where("route_name",'LIKE',"admin.invoice.index")->COUNT()>0)?$providerPermission->where("route_name",'LIKE',"admin.invoice.index")->first()->id:"")->COUNT()>0 )
+@if (Auth::user()->Role->RolePermission->where('id_permission',($providerPermission->where("route_name",'LIKE',"admin.invoice.index")->COUNT()>0)?$providerPermission->where("route_name",'LIKE',"admin.invoice.index")->first()->id:"")->COUNT()>0 )
     <li class="nav-item mt-1">
         <a href="{{ route('admin.invoice.index') }}" class="nav-link  {{ (request()->routeIs('admin.invoice*')) ? 'active' : '' }}">
             <i class="nav-icon fas fa-file-signature"></i>
@@ -74,7 +74,34 @@
             </p>
         </a>
     </li>
-@endif --}}
+@endif
+@if (Auth::user()->Role->RolePermission->where('id_permission',($providerPermission->where("route_name",'LIKE',"admin.laporan")->COUNT()>0)?$providerPermission->where("route_name",'LIKE',"admin.laporan")->first()->id:"")->COUNT()>0 )
+    <li class="nav-item  {{ (request()->routeIs('admin.laporan*')) ? 'menu-open' : '' }}  mt-1">
+        <a href="#" class="nav-link {{ (request()->routeIs('admin.laporan*')) ? 'active' : '' }}">
+            <i class="nav-icon fas fa-table"></i>
+            <p>
+                Laporan
+                <i class="right fas fa-angle-left"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="{{ route('admin.laporan.invoice') }}" class="nav-link {{ (request()->routeIs('admin.laporan.invoice*')) ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-user"></i>
+                    <p>Invoice</p> 
+                </a>
+            </li>
+        </ul>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="{{ route('admin.laporan.pendapatan') }}" class="nav-link {{ (request()->routeIs('admin.laporan.pendapatan*')) ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-user"></i>
+                    <p>Pendapatan</p> 
+                </a>
+            </li>
+        </ul>
+    </li>
+@endif
 @if (Auth::user()->Role->RolePermission->where('id_permission',($providerPermission->where("route_name",'LIKE',"admin.master")->COUNT()>0)?$providerPermission->where("route_name",'LIKE',"admin.master")->first()->id:"")->COUNT()>0 )
     <li class="nav-item  {{ (request()->routeIs('admin.master*')) ? 'menu-open' : '' }}  mt-1">
         <a href="#" class="nav-link {{ (request()->routeIs('admin.master*')) ? 'active' : '' }}">

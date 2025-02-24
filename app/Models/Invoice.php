@@ -26,8 +26,10 @@ class Invoice extends Model
     function colorStatus($stat){
         if($stat == 1){
             return 'secondary';
-        }elseif($stat == 1){
-        }elseif($stat == 1){
+        }elseif($stat == 2){
+            return 'info';
+        }elseif($stat == 3){
+            return 'success';
         }
     }
     public function Konsumen()
@@ -41,5 +43,53 @@ class Invoice extends Model
     public function Pemesanan()
     {
         return $this->belongsTo(Pemesanan::class, 'id_pemesanan', 'id');
+    }
+    function totalInvoice(){
+        $invoice = Invoice::whereIn('status',[2,3])->get();
+        $totalInvoice = 0;
+        foreach ($invoice as $item) {
+            foreach ($item->Pemesanan->PemesananDetail->where('status_barang_user',1)->where('tgl_harga_acc',"!=",null) as $value) {
+                $totalInvoice+=$value->qty*$value->harga_per_satuan;
+            }
+        }
+        return $totalInvoice;
+    }
+    function totalInvoiceLunas(){
+        $invoice = Invoice::whereIn('status',[3])->get();
+        $totalInvoice = 0;
+        foreach ($invoice as $item) {
+            foreach ($item->Pemesanan->PemesananDetail->where('status_barang_user',1)->where('tgl_harga_acc',"!=",null) as $value) {
+                $totalInvoice+=$value->qty*$value->harga_per_satuan;
+            }
+        }
+        return $totalInvoice;
+    }
+    function totalInvoiceJatuhTempo(){
+        $invoice = Invoice::whereIn('status',[2])->where('tgl_tempo',"<",date("Y-m-d H:m:i", strtotime(NOW())))->get();
+        $totalInvoice = 0;
+        foreach ($invoice as $item) {
+            foreach ($item->Pemesanan->PemesananDetail->where('status_barang_user',1)->where('tgl_harga_acc',"!=",null) as $value) {
+                $totalInvoice+=$value->qty*$value->harga_per_satuan;
+            }
+        }
+        return $totalInvoice;
+    }
+    function totalInvoiceBelumJatuhTempo(){
+        $invoice = Invoice::whereIn('status',[2])->where('tgl_tempo',">",date("Y-m-d H:m:i", strtotime(NOW())))->get();
+        $totalInvoice = 0;
+        foreach ($invoice as $item) {
+            foreach ($item->Pemesanan->PemesananDetail->where('status_barang_user',1)->where('tgl_harga_acc',"!=",null) as $value) {
+                $totalInvoice+=$value->qty*$value->harga_per_satuan;
+            }
+        }
+        return $totalInvoice;
+    }
+    function totalPerInvoice($id){
+        $invoice = Invoice::find($id);
+        $totalInvoice = 0;
+        foreach ($invoice->Pemesanan->PemesananDetail->where('status_barang_user',1)->where('tgl_harga_acc',"!=",null) as $value) {
+            $totalInvoice+=$value->qty*$value->harga_per_satuan;
+        }
+        return $totalInvoice;
     }
 }

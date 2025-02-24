@@ -109,16 +109,7 @@
                 @elseif ($jenis_transaksi == 1)
                     <div class="card border-primary" wire:loading.remove wire:target="setAktivitas">
                         <div class="card-header">
-                            <div class="card-title"><strong>Informasi Invoice</strong> </div>
-                            <div class="card-option float-right">
-                                @if ($invoiceSelect->status == 1)
-                                    <span class="badge bg-secondary"><i class="fas fa-spinner fa-spin"></i> Belum Diproses</span>
-                                @elseif ($invoiceSelect->status == 2)
-                                    <span class="badge bg-primary"><i class="fas fa-file-invoice"></i> Terbit</span>
-                                @elseif ($invoiceSelect->status == 3)
-                                    <span class="badge bg-success"><i class="fas fa-file-invoice"></i> Lunas</span>
-                                @endif
-                            </div>
+                            <div class="card-title"><strong>Informasi Pemesanan</strong> </div>
                         </div>
                         <div class="card-body" >
                             <div class="row">
@@ -148,66 +139,60 @@
                                             <div class="col-sm-6 invoice-col mb-2">
                                                 <b>No. Invoice:</b>  <a href="{{ route('admin.pemesanan.show',$invoiceSelect->id_pemesanan) }}" target="_blank">{{ $invoiceSelect->no_invoice }} <i class="fas fa-external-link-alt"></i></a><br>
                                                 <b>Tgl. Pesan:</b> {{  \Carbon\Carbon::parse($invoiceSelect->Pemesanan->tgl_pemesanan)->translatedFormat('l, d F Y')  }}<br>
-                                                <b>Tgl. Jatuh Tempo:</b> {{  ($invoiceSelect->tgl_tempo==null)?"-":\Carbon\Carbon::parse($invoiceSelect->tgl_tempo)->translatedFormat('l, d F Y')  }}<br>
+                                                <b>Tgl. Pelunasan:</b> {{  ($invoiceSelect->tgl_bayar==null)?"-":\Carbon\Carbon::parse($invoiceSelect->tgl_bayar)->translatedFormat('l, d F Y')  }}<br>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-12 table-responsive">
-                                                <table class="table table-striped">
+                                                <table class="table table-striped table-hover table-bordered">
                                                     <thead>
                                                         <tr class="text-center">
-                                                            <th>No</th>
-                                                            <th>Jenis Barang</th>
+                                                            <th rowspan="2">No</th>
+                                                            <th rowspan="2">Jenis Barang</th>
+                                                            <th colspan="3">Permintaan</th>
+                                                            <th colspan="3">Pembelian</th>
+                                                            <th rowspan="2">Pendapatan </th>
+                                                        </tr>
+                                                        <tr class="text-center">
                                                             <th>Qty</th>
                                                             <th>Harga Satuan</th>
-                                                            <th>Total Harga</th>
-                                                            <th>PPh 1,5% </th>
-                                                            <th>Sub Total </th>
+                                                            <th>Total</th>
+                                                            <th>Qty</th>
+                                                            <th>Harga Satuan</th>
+                                                            <th>Total</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         @php
-                                                            $totalHarga = 0;
-                                                            $pajak = 0;
-                                                            $total = 0;
+                                                            $totalPendapatan = 0;
                                                         @endphp
                                                         @foreach ($invoiceSelect->Pemesanan->PemesananDetail->where('status_barang_user',1) as $item)
+                                                           
                                                             <tr class="text-center">
                                                                 <td>{{ $loop->iteration }}</td>
                                                                 <td>{{ $item->Barang->nama_barang }}</td>
                                                                 <td>{{ $item->qty }} {{ $item->Satuan->satuan }}</td>
                                                                 <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format($item->harga_per_satuan, 0, ",", ".") }}</td>
                                                                 <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format($item->harga_per_satuan*$item->qty, 0, ",", ".") }}</td>
-                                                                <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format(($item->harga_per_satuan*$item->qty)*0.015, 0, ",", ".") }}</td>
+                                                                
+                                                                <td>{{ $item->Penyiapan->SUM('qty') }} {{ $item->Satuan->satuan }}</td>
+                                                                <td>{{ ($item->Penyiapan==null)?"-":"Rp. " .  number_format($item->Penyiapan->SUM('harga_satuan'), 0, ",", ".") }}</td>
+                                                                <td>{{ ($item->Penyiapan==null)?"-":"Rp. " .  number_format($item->Penyiapan->SUM('harga_satuan')*$item->Penyiapan->SUM('qty'), 0, ",", ".") }}</td>
+
+                                                                <td>{{ ($item->Penyiapan==null)?"-":"Rp. " .  number_format(($item->harga_per_satuan*$item->qty)-($item->Penyiapan->SUM('harga_satuan')*$item->Penyiapan->SUM('qty')), 0, ",", ".") }}</td>
                                                                 @php
-                                                                    $total+=($item->harga_per_satuan*$item->qty)+($item->harga_per_satuan*$item->qty)*0.015;
-                                                                    $pajak+=($item->harga_per_satuan*$item->qty)*0.015;
-                                                                    $totalHarga+=($item->harga_per_satuan*$item->qty);
+                                                                    $totalPendapatan +=($item->harga_per_satuan*$item->qty)-($item->Penyiapan->SUM('harga_satuan')*$item->Penyiapan->SUM('qty'));
                                                                 @endphp
-                                                                <td>{{ ($item->harga_per_satuan==null)?"-":"Rp. " .  number_format(($item->harga_per_satuan*$item->qty)+($item->harga_per_satuan*$item->qty)*0.015, 0, ",", ".") }}</td>
                                                             </tr>
                                                         @endforeach
                                                         <tr>
-                                                            <th colspan="4">Total</th>
-                                                            <th class="text-center">{{ "Rp. " .  number_format($totalHarga, 0, ",", ".") }}</th>
-                                                            <th class="text-center">{{ "Rp. " .  number_format($pajak, 0, ",", ".") }}</th>
-                                                            <th class="text-center">{{ "Rp. " .  number_format($total, 0, ",", ".") }}</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th colspan="4" class=" text-lg">Total Invoice</th>
+                                                            <th colspan="4" class=" text-lg">Total Pendapatan</th>
                                                             <th colspan="3">
-                                                                <input class="form-control text-center text-lg text-bold" required="true"  type="text" value="{{ "Rp. " .  number_format($totalHarga, 0, ",", ".") }}" readonly>
+                                                                <input class="form-control text-center text-lg text-bold {{ ($totalPendapatan>0)?'bg-success':'bg-danger' }}" required="true"  type="text" value="{{ "Rp. " .  number_format($totalPendapatan, 0, ",", ".") }}" readonly>
                                                             </th>
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                            </div>
-                                        </div>
-                                        <div class="row no-print">
-                                            <div class="col-12">
-                                                <a href="{{ route('admin.pemesanan.invoicePrint',$invoiceSelect->Pemesanan->id) }}" target="_blank" type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-                                                    <i class="fas fa-print"></i> Print
-                                                </a>
                                             </div>
                                         </div>
                                     </div>

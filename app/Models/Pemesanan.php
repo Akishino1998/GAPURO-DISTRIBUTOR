@@ -124,10 +124,8 @@ class Pemesanan extends Model
     function totalPemesanan($id){
         $pemesanan = Pemesanan::find($id);
         $total = 0;
-        $pajak = 0;
-        foreach ($pemesanan->PemesananDetail->where('status_tersedia',1) as $item) {
-            $pajak += (($item->harga_per_satuan*$item->qty)*0.015);
-            $total+=($item->harga_per_satuan*$item->qty)+(($item->harga_per_satuan*$item->qty)*0.015);
+        foreach ($pemesanan->PemesananDetail->where('status_barang_user',1) as $item) {
+            $total+=($item->harga_per_satuan*$item->qty);
         }
         return $total;
     }

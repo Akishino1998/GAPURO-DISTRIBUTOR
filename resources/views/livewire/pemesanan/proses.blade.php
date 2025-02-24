@@ -22,7 +22,6 @@
                 <div class="card-options float-right">
                     @if ($pemesanan->status == 3)
                         <button data-toggle="modal" data-target="#modalBatalkanPemesanan" class="btn btn-danger btn-sm"><i class="fas fa-times-circle"></i> Batalkan Pemesanan</button>
-                        
                     @elseif($pemesanan->status == 7)
                         <button data-toggle="modal" data-target="#modalPesananDiterima" class="btn btn-warning btn-sm"><i class="fas fa-hands"></i>  Pesanan sudah diterima?</button>
                     @elseif($pemesanan->status == 5)
@@ -31,21 +30,23 @@
                     @else
                         <button class="btn btn-{{ $pemesanan->colorStatus($pemesanan->status) }} btn-sm">{!! $pemesanan->status($pemesanan->status) !!} </button>
                     @endif
-
-                    @if ($pemesanan->Invoice != null)
-                        <a href="{{ route('invoicePemesanan',$pemesanan->id) }}" class="btn btn-info btn-sm"><i class="fas fa-file-invoice"></i> Invoice </a>
-                    @endif
-                    @if ($pemesanan->cekStatusTambahan($pemesanan->id))
-                        <a href="{{ route('pemesanan.cekHarga',$pemesanan->id) }}" class="btn btn-warning btn-sm"> <i class="fas fa-file-signature"></i> Setujui Pesanan Tambahanmu</a>
-                    @endif
-                    @if ($pemesanan->PemesananDetail->where('status_ditambahkan',1)->where('status_diajukan',2)->COUNT() > 0 )
-                        <a href="{{ route('pemesanan.cekHarga',$pemesanan->id) }}" class="btn btn-warning btn-sm"><strong><i class="fas fa-tasks"></i> Cek Barang</strong></a>
-                        @if ($pemesanan->cekStatusHargaUser($pemesanan->id)==0 AND $pemesanan->PemesananTambahan->where('status_ditambahkan','!=',1)->where('status_pemesanan',1)->COUNT()>0)
-                            <button  data-toggle="modal" data-target="#modalSetujuiBarang"  class="btn btn-{{ $pemesanan->colorStatus($pemesanan->status) }} btn-sm"><strong><i class="fas fa-clipboard-check"></i> Setujui Semua Harga</strong></button>
-                        @elseif($pemesanan->cekStatusHargaUser($pemesanan->id) < COUNT($pemesanan->PemesananDetail))
-                            <button data-toggle="modal" data-target="#modalSetujuiBarang"  class="btn btn-{{ $pemesanan->colorStatus($pemesanan->status) }} btn-sm"><strong><i class="fas fa-clipboard-check"></i> Setujui Barang Terpilih</strong></button>
+                    @if ($pemesanan->status != 0)
+                        @if ($pemesanan->Invoice != null)
+                            <a href="{{ route('invoicePemesanan',$pemesanan->id) }}" class="btn btn-info btn-sm"><i class="fas fa-file-invoice"></i> Invoice </a>
+                        @endif
+                        @if ($pemesanan->cekStatusTambahan($pemesanan->id))
+                            <a href="{{ route('pemesanan.cekHarga',$pemesanan->id) }}" class="btn btn-warning btn-sm"> <i class="fas fa-file-signature"></i> Setujui Pesanan Tambahanmu</a>
+                        @endif
+                        @if ($pemesanan->PemesananDetail->where('status_ditambahkan',1)->where('status_diajukan',2)->COUNT() > 0 )
+                            <a href="{{ route('pemesanan.cekHarga',$pemesanan->id) }}" class="btn btn-warning btn-sm"><strong><i class="fas fa-tasks"></i> Cek Barang</strong></a>
+                            @if ($pemesanan->cekStatusHargaUser($pemesanan->id)==0 AND $pemesanan->PemesananTambahan->where('status_ditambahkan','!=',1)->where('status_pemesanan',1)->COUNT()>0)
+                                <button  data-toggle="modal" data-target="#modalSetujuiBarang"  class="btn btn-success btn-sm"><strong><i class="fas fa-clipboard-check"></i> Setujui Semua Harga</strong></button>
+                            @elseif($pemesanan->cekStatusHargaUser($pemesanan->id) < COUNT($pemesanan->PemesananDetail))
+                                <button data-toggle="modal" data-target="#modalSetujuiBarang"  class="btn btn-success btn-sm"><strong><i class="fas fa-clipboard-check"></i> Setujui Barang Terpilih</strong></button>
+                            @endif
                         @endif
                     @endif
+                    
                    
                 </div>
             </div>
@@ -100,25 +101,26 @@
                                 <h5><i class="fas fa-danger"></i> Note:</h5>
                                 Pesanan dibatalkan! Keterangan: {{ $pemesanan->keterangan_batal }}
                             </div>
+                        @else
+                            <div class="row" style="background:#F8C25C;border-radius:20px;margin:20px 0px">
+                                <div class="col-lg-4">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="{{ asset('img/status/stat11.png') }}" alt="" style="width:50%">
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="d-flex flex-column flex-lg-row-auto " style="padding:50px">
+                                        <h6 class="font-weight-bolder text-dark">Kamu masih bisa menambahkan pesananmu selagi masih disiapkan</h6>
+                                            <a href="{{ route('tambahPemesanan',$pemesanan->id) }}">
+                                                <button type="button" id="btn-register" class="btn btn-warning font-weight-bolder btn-md btn-pill " style="color: white;border-color:#EE9D01;background-color:#EE9D01;box-shadow: 5px 5px #00000059;">
+                                                    <i class="fas fa-shopping-basket"></i>
+                                                    Tambah Belanja
+                                                </button>
+                                            </a>
+                                    </div>
+                                </div>
+                            </div>
                         @endif
-                        <div class="row" style="background:#F8C25C;border-radius:20px;margin:20px 0px">
-                            <div class="col-lg-4">
-                                <div class="d-flex justify-content-center">
-                                    <img src="{{ asset('img/status/stat11.png') }}" alt="" style="width:50%">
-                                </div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="d-flex flex-column flex-lg-row-auto " style="padding:50px">
-                                    <h6 class="font-weight-bolder text-dark">Kamu masih bisa menambahkan pesananmu selagi masih disiapkan</h6>
-                                        <a href="{{ route('tambahPemesanan',$pemesanan->id) }}">
-                                            <button type="button" id="btn-register" class="btn btn-warning font-weight-bolder btn-md btn-pill " style="color: white;border-color:#EE9D01;background-color:#EE9D01;box-shadow: 5px 5px #00000059;">
-                                                <i class="fas fa-shopping-basket"></i>
-                                                Tambah Belanja
-                                            </button>
-                                        </a>
-                                </div>
-                            </div>
-                        </div>
                         <div class="card card-primary card-outline">
                             <table class="table table-sm table-striped table-hover " id="servisan-table">
                                 <thead>

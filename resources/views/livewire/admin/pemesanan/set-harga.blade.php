@@ -146,15 +146,23 @@
                                                 @if ($item->status_pemesanan == 2)
                                                     <span class="badge bg-success"><i class="fas fa-file-signature"></i> Ditambahkan</span>
                                                 @else
-                                                    <button class="btn btn-success btn-sm"><i class="fas fa-check-double    "></i> Disetujui</button>
-                                                    <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalResetStatusBarang" wire:click="setResetStatusBarang({{ $item->id }},2)"><i class="fas fa-exchange-alt"></i></button>
+                                                    @if ($item->status_diajukan==1)
+                                                        <button class="btn btn-success btn-sm"><i class="fas fa-check-double    "></i> Disetujui</button>
+                                                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalResetStatusBarang" wire:click="setResetStatusBarang({{ $item->id }},2)"><i class="fas fa-exchange-alt"></i></button>
+                                                    @else
+                                                        <span class="badge bg-info"><i class="fas fa-spinner fa-spin"></i> Pengajuan</span>
+                                                    @endif
                                                 @endif
                                             @elseif($item->status_ditambahkan == 3)
                                                 @if ($item->status_pemesanan == 2)
                                                     <span class="badge bg-danger"><i class="fas fa-times   "></i> Tidak ada</span>
                                                 @else
-                                                    <button class="btn btn-danger btn-sm"><i class="fas fa-times   "></i> Ditolak</button>
-                                                    <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalResetStatusBarang" wire:click="setResetStatusBarang({{ $item->id }},2)"><i class="fas fa-exchange-alt"></i></button>
+                                                    @if ($item->status_diajukan==1)
+                                                        <button class="btn btn-danger btn-sm"><i class="fas fa-times   "></i> Ditolak</button>
+                                                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalResetStatusBarang" wire:click="setResetStatusBarang({{ $item->id }},2)"><i class="fas fa-exchange-alt"></i></button>
+                                                    @else
+                                                        <span class="badge bg-info"><i class="fas fa-spinner fa-spin"></i> Pengajuan</span>
+                                                    @endif
                                                 @endif
                                             @endif
                                         @endif

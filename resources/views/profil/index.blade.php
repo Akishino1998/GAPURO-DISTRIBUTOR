@@ -225,6 +225,11 @@
             </div>
         </div>
     </section>
+    <section id="productive-section" class="productive-section pt-100 pb-70" >
+        <div class="container-fluid" id="produk">
+            <img src="{{ asset('img/info.png') }}" alt="" srcset="">
+        </div>
+    </section>
     <section class="what-we-do-section-2" id="about">
         <div class="what-we-do-section px-4 ptb-100" style="-webkit-border-radius:0">
             <div class="container">
@@ -270,7 +275,6 @@
                                 <a href="single-blog.html">
                                     <h3>Persawahan Indonesia</h3>
                                 </a>
-                                <p>Lorem ipsum dolor sit amconsectetur adipiscing elit, sed do eiusmodor.</p>
                             </div>
                             <ul class="blog-list">
                                 <li>
@@ -300,7 +304,6 @@
                                 <a href="single-blog.html">
                                     <h3>Perkebunan Indonesia</h3>
                                 </a>
-                                <p>Lorem ipsum dolor sit amconsectetur adipiscing elit, sed do eiusmodor.</p>
                             </div>
                             <ul class="blog-list">
                                 <li>
@@ -330,7 +333,6 @@
                                 <a href="single-blog.html">
                                     <h3>Peternakan Indonesia</h3>
                                 </a>
-                                <p>Lorem ipsum dolor sit amconsectetur adipiscing elit, sed do eiusmodor.</p>
                             </div>
                             <ul class="blog-list">
                                 <li>

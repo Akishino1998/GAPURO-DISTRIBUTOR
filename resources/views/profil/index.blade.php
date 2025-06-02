@@ -7,15 +7,8 @@
     <meta name="theme-color" content="#FFD31A">
     <link rel="stylesheet" href="{{ asset('profil/css/animate.min.css') }}">
     <link rel="stylesheet" href="{{ asset('profil/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('profil/css/flaticon.css') }}">
-    <link rel="stylesheet" href="{{ asset('profil/css/flaticon-two.css') }}">
-    <link rel="stylesheet" href="{{ asset('profil/css/flaticon-three.css') }}">
     <link rel="stylesheet" href="{{ asset('profil/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('profil/css/meanmenu.css') }}">
-    <link rel="stylesheet" href="{{ asset('profil/css/magnific-popup.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('profil/css/nice-select.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('profil/css/odometer.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('profil/css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('profil/css/progressbar.min.css') }}">
     <link rel="stylesheet" href="{{ asset('profil/css/responsive.css') }}">
     <link rel="stylesheet" href="{{ asset('profil/css/style.css') }}">
@@ -73,10 +66,10 @@
             min-height : 0px !important;
             padding-top: 0px !important;
         }
+ 
     </style>
     <title>GAPURO   </title>
 </head>
-
 <body>
     <!-- Start Navbar Area Two -->
     <div class="navbar-area-two">
@@ -103,8 +96,11 @@
                             <li class="nav-item"><a href="#produk" class="nav-link">Our Products</a></li>
                             <li class="nav-item"><a href="#about" class="nav-link">About Us</a></li>
                             <li class="nav-item"><a href="#news" class="nav-link">News</a></li>
+                            <li class="nav-item btn-login" id="fadeshow1">                            
+                                <a class="nav-link" href="{{ route('login') }}">Login</a>
+                            </li>
                         </ul>
-                        <div class="others-options saas-option">
+                        <div class="others-options saas-option" >
                             <a class="saas-nav-btn" href="{{ route('login') }}">Login</a>
                         </div>
                     </div>
@@ -440,20 +436,26 @@
     <!-- End Go Top Section -->
 
     <script src="{{ asset('profil/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('profil/js/popper.min.js') }}"></script>
     <script src="{{ asset('profil/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('profil/js/jquery.meanmenu.js') }}"></script>
     <script src="{{ asset('profil/js/jquery.appear.min.js') }}"></script>
-    <script src="{{ asset('profil/js/odometer.min.js') }}"></script>
     <script src="{{ asset('profil/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('profil/js/jquery.magnific-popup.min.js') }}"></script>
     <script src="{{ asset('profil/js/jquery.nice-select.min.js') }}"></script>
     <script src="{{ asset('profil/js/wow.min.js') }}"></script>
     <script src="{{ asset('profil/js/form-validator.min.js') }}"></script>
     <script src="{{ asset('profil/js/jquery.ajaxchimp.min.js') }}"></script>
-    <script src="{{ asset('profil/js/particles.min.js') }}"></script>
     <script src="{{ asset('profil/js/progressbar.min.js') }}"></script>
     <script src="{{ asset('profil/js/main.js') }}"></script>
     <script type="text/javascript" src="{{ asset('profil/js/slick.min.js')}}"></script>
 </body>
 </html>
+<script>
+$(window).resize(function() {
+if ($(this).width() < 480) {
+  $('#fadeshow1').show();
+} else {
+  $('#fadeshow1').hide();
+}
+});
+</script>
